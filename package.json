@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite frontend",
-    "build": "vite build frontend && touch public/.keep",
+    "no-build": "vite build frontend && touch public/.keep",
     "preview": "vite preview frontend",
     "dev-old": "vite",
     "build-old": "vite build",
