@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  auto_duration_word_rate: 1.5
+  auto_duration_constant: 1.5
+  avatar_mode: 1
+  always_speak_text: false
+  default_voice: MyString
+  pause_to_riff: false
+  play_after_riff: false
+  immediate_save: false
+
+two:
+  user: two
+  auto_duration_word_rate: 1.5
+  auto_duration_constant: 1.5
+  avatar_mode: 1
+  always_speak_text: false
+  default_voice: MyString
+  pause_to_riff: false
+  play_after_riff: false
+  immediate_save: false

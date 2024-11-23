@@ -1,0 +1,842 @@
+<style>
+
+.rifftube-riff-edit-animated
+{
+    transition: max-height 0.25s cubic-bezier(0.5, 0, 0.5, 1.0);
+    max-height: var(--max-height);
+    overflow: hidden;
+}
+
+.rifftube-riff-edit-anim-hide
+{
+    max-height: 0;
+}
+
+.rifftube-hidden
+{
+    display: none;
+}
+
+</style>
+
+<%= form_with model: @riff, multipart: true, html: {'novalidate' => 'true'} do |form| %>
+
+<div>
+<%= form.collection_radio_buttons :riff_kind,
+    [[1, "Recorded audio"], [2, "Synthesized audio"], [3, "No audio"]],
+    :first, :last %>
+</div>
+
+<div id="rifftube-riff-edit-rec-div" class="rifftube-riff-edit-animated">
+    <div style="margin-top: 1em;" id="rifftube-edit-audio-playback">
+        <audio controls
+            src="<%= id.present? ? riff_path(id) : '' %>">
+        </audio>
+    </div>
+    <button
+        class="rifftube-record-btn"
+        onMouseDown="rifftube.record_start()"
+        onMouseUp="rifftube.record_stop()"
+        onClick="event.preventDefault();">
+        record
+    </button>
+    (press and hold)
+
+    <details open id="rifftube-riff-edit-rec-adv-det">
+        <summary>Advanced Options</summary>
+        <div>
+            <input type="file" name="riff[audio]" accept="audio/mp4">
+        </div>
+    </details>
+</div>
+
+<div style="margin-top: 1em;" id="rifftube-edit-synth-playback" class="rifftube-riff-edit-animated">
+    <button
+        class="rifftube-synth-play-btn"
+        onClick="rifftube.synth_playback(event)">
+        ▶️
+    </button>
+
+    <select id="rifftube-riff-edit-voice-sel">
+    </select>
+
+    <%= form.hidden_field :voice %>
+
+    <details open id="rifftube-riff-edit-synth-adv-det">
+        <summary>Advanced Options</summary>
+        <div>
+            Pitch:
+            <input type="range" id="rifftube-riff-edit-synth-pitch" step="0.1" min="0" max="2" value="1">
+            <input type="number" id="rifftube-riff-edit-synth-pitch-num" step="0.1" min="0" max="2" value="1">
+            <button
+                onClick="rifftube.curSynthPitchNum.value=rifftube.curSynthPitchRange.value=1; event.preventDefault();">
+                Reset
+            </button>
+                
+        </div>
+        <div>
+            Rate:
+            <input type="range" id="rifftube-riff-edit-synth-rate" step="0.1" min="0.1" max="10" value="1">
+            <input type="number" id="rifftube-riff-edit-synth-rate-num" step="0.1" min="0.1" max="10" value="1">
+            <button
+                onClick="rifftube.curSynthRateNum.value=rifftube.curSynthRateRange.value=1; event.preventDefault();">
+                Reset
+            </button>
+        </div>
+    </details>
+
+</div>
+
+<%= form.hidden_field :id %>
+
+<% if video_id.present? %>
+<input type="hidden" name="riff[video_id]" value="<%= video_id %>">
+<% end %>
+
+<div>
+<%= form.label :text, "Riff Text" %><br>
+<%= form.text_area :text %><br>
+</div>
+
+<div>
+<%= form.check_box :showText %>
+<%= form.label :showText, "Display text" %>
+</div>
+
+<div>
+<%= form.label :start, "Start Time" %><br>
+<%= form.number_field :start, step: 0.5 %><br>
+</div>
+
+<div>
+    <%= form.label :duration %>
+    <%= form.number_field :duration, step: 0.5 %>
+    <span id="rifftube-riff-edit-duration-auto">(auto)</span>
+</div>
+
+<div id="rifftube-riff-edit-time-div" class="rifftube-riff-edit-animated">
+    <div>
+        <%= form.check_box :autoDuration %>
+        <%= form.label :autoDuration, "Auto-determine duration" %>
+    </div>
+    <button
+        class="rifftube-timing-btn"
+        onMouseDown="rifftube.timing_start();"
+        onMouseUp="rifftube.timing_stop();"
+        onClick="event.preventDefault();">
+        time
+    </button>
+    (press and hold)
+</div>
+
+<div style="margin-top: 1em;">
+<button
+    onClick="rifftube.close_modal(); event.preventDefault();">
+    Cancel
+</button>
+
+<button
+    onClick="rifftube.save_riff(event);">
+    Save
+</button>
+</div>
+
+</div>
+
+<% end %>
+
+<script>
+
+function duplicate_blob(blob)
+{
+    return blob.slice(0, blob.size, blob.type);
+}
+
+// actually a div:
+var dialSel = ".rifftube-riff-edit-dialog"; //[data-<%= id.present? ? "riff-id='#{id}'".html_safe : "new-riff" %>]";
+var curDial = document.querySelector(dialSel);
+
+var rifftube = window.rifftube || {};
+
+rifftube.curDial = curDial;
+rifftube.curForm = rifftube.curDial.querySelector("form");
+rifftube.curRecDiv = rifftube.curDial.querySelector("#rifftube-riff-edit-rec-div");
+rifftube.curTimeDiv = rifftube.curDial.querySelector("#rifftube-riff-edit-time-div");
+rifftube.curSynthDiv = rifftube.curDial.querySelector("#rifftube-edit-synth-playback");
+rifftube.curSynthPitchRange = rifftube.curDial.querySelector("#rifftube-riff-edit-synth-pitch");
+rifftube.curSynthRateRange = rifftube.curDial.querySelector("#rifftube-riff-edit-synth-rate");
+rifftube.curSynthPitchNum = rifftube.curDial.querySelector("#rifftube-riff-edit-synth-pitch-num");
+rifftube.curSynthRateNum = rifftube.curDial.querySelector("#rifftube-riff-edit-synth-rate-num");
+rifftube.curRecBtn = rifftube.curDial.querySelector(".rifftube-record-btn");
+rifftube.curTimeBtn = rifftube.curDial.querySelector(".rifftube-timing-btn");
+rifftube.curRecAdvDet = rifftube.curDial.querySelector("#rifftube-riff-edit-rec-adv-det");
+rifftube.curSynthAdvDet = rifftube.curDial.querySelector("#rifftube-riff-edit-synth-adv-det");
+rifftube.curPlayer = rifftube.curDial.querySelector("audio");
+rifftube.curFile = rifftube.curDial.querySelector("input[type='file']");
+rifftube.curDur = rifftube.curForm.querySelector("[name='riff[duration]']");
+rifftube.curShowChk = rifftube.curForm.querySelector("[type='checkbox'][name='riff[showText]']");
+rifftube.curTextArea = rifftube.curForm.querySelector("textarea");
+rifftube.curAutoChk = rifftube.curForm.querySelector("[type='checkbox'][name='riff[autoDuration]']");
+rifftube.curDurAuto = rifftube.curForm.querySelector("#rifftube-riff-edit-duration-auto");
+rifftube.curTypeRad = rifftube.curForm.querySelectorAll("[type='radio'][name='riff[riff_kind]']");
+rifftube.curStart = rifftube.curForm.querySelector("[name='riff[start]']");
+
+rifftube.curTypeSel = rifftube.curForm.querySelector("[type='radio'][name='riff[riff_kind]'][checked]");
+
+rifftube.curVoicesSel = rifftube.curDial.querySelector("#rifftube-riff-edit-voice-sel");
+rifftube.curVoice = rifftube.curForm.querySelector("[name='riff[voice]']");
+
+/*
+use audio:          isText  speak
+- recorded          false   false
+- synthesized       true    true 
+- no                true    false
+isText = false -> speak = false, auto-duration = true (show = t/f)
+isText = true, speak = false -> show = true (auto-duration = t/f)
+isText = true, speak = true -> auto-duration = true (show = t/f)
+*/
+
+// maybe don't need to duplicate all the time? ... not sure
+
+if (rifftube.curFile.files.length == 1)
+{
+    let audio_URL = URL.createObjectURL(duplicate_blob(rifftube.curFile.files[0]));
+    rifftube.curPlayer.src = audio_URL;
+    rifftube.temp_audio = duplicate_blob(rifftube.curFile.files[0])
+    console.log("did it", rifftube.curFile.files[0]);
+}
+
+// voices
+
+rifftube.setVoiceInfo = function (voice)
+{
+    rifftube.curVoiceInfo =
+        {
+            name: voice.name,
+            lang: voice.lang,
+            pitch: 1,
+            rate: 1
+        };
+    rifftube.updateVoiceInfo();
+}
+
+rifftube.updateVoiceInfo = function ()
+{
+    rifftube.curVoice.value = JSON.stringify(rifftube.curVoiceInfo);
+}
+
+rifftube.getVoices = function()
+{
+    let voices = speechSynthesis.getVoices();
+    //console.log(voices);
+
+    let sysInd;
+    let voiceFound = false;
+
+    rifftube.curVoicesSel.innerHTML = "";
+
+    let voiceInfo =
+        rifftube.curVoice.value ?
+            JSON.parse(rifftube.curVoice.value)
+        :
+            null;
+    rifftube.curVoiceInfo = voiceInfo;
+
+    // set pitch and rate controls
+    if (voiceInfo)
+    {
+        rifftube.curSynthPitchRange.value = rifftube.curSynthPitchNum.value = voiceInfo.pitch;
+        rifftube.curSynthRateRange.value = rifftube.curSynthRateNum.value = voiceInfo.rate;
+    }
+    else
+    {
+        rifftube.curSynthPitchRange.value = rifftube.curSynthPitchNum.value = 1;
+        rifftube.curSynthRateRange.value = rifftube.curSynthRateNum.value = 1;
+    }
+
+    // search for voice language + name in list
+    for (let i = 0; i < voices.length; i++)
+    {
+        const voice = voices[i];
+        //console.log(voice);
+        const option = document.createElement("option");
+        option.textContent = `${voice.name} (${voice.lang})`;
+
+        option.dataset.voiceID = `${voice.lang}/${voice.name}`;
+        option.voice = voice;
+
+        rifftube.curVoicesSel.appendChild(option);
+
+        if (voice.default) {
+            option.textContent += " (System Default)";
+            sysInd = i;
+        }
+
+        // voiceInfo may be null
+        if (voiceInfo?.lang == voice.lang && voiceInfo?.name == voice.name)
+        {
+            rifftube.curVoicesSel.selectedIndex = i;
+            voiceFound = true;
+            rifftube.synthVoice = voice;
+        }
+    }
+
+    // if not found, use default
+    if (!voiceFound)
+    {
+        rifftube.curVoicesSel.selectedIndex = sysInd;
+        rifftube.synthVoice = voices[sysInd];
+        // leave the info alone if it exists (don't overwrite if not voice found)
+        // otherwise fill in with default (if found -- they aren't loaded at first?)
+        if (!rifftube.curVoiceInfo && rifftube.synthVoice)
+            rifftube.setVoiceInfo(rifftube.synthVoice);
+    }
+}
+
+rifftube.curVoicesSel.addEventListener("change",
+    e =>
+    {
+        const opt = e.target[e.target.selectedIndex];
+        console.log(e, opt.voice);
+        let voiceID = e.target.dataset.voiceID;
+        rifftube.curVoice.value = voiceID;
+        rifftube.synthVoice = opt.voice;
+        rifftube.setVoiceInfo(opt.voice);
+    }
+);
+
+rifftube.getVoices();
+
+speechSynthesis.addEventListener("voiceschanged",
+    e =>
+    {
+        rifftube.getVoices();
+    }
+);
+
+// animation prep
+
+rifftube.animationPrep = function ()
+{
+    let flag = false;
+    rifftube.curDial.querySelectorAll(".rifftube-riff-edit-animated").forEach(
+        el =>
+        {
+            //el.style.maxHeight = `${Math.ceil(el.offsetHeight * 100 / window.innerHeight)}vh`;
+            if (el.offsetHeight == 0 && el.style.getPropertyValue("--max-height") === "")
+            {
+                console.log("mh!", el, el.offsetHeight);
+                flag = true;
+            }
+            else if (el.style.getPropertyValue("--max-height") === "")
+                el.style.setProperty("--max-height", `${Math.ceil(el.offsetHeight)}px`);
+        }
+    );
+
+    if (flag)
+    {
+        setTimeout(rifftube.animationPrep);
+        return;
+    }
+
+    rifftube.curRecAdvDet.removeAttribute("open");
+    rifftube.curSynthAdvDet.removeAttribute("open");
+
+    rifftube.audioTypeUICallback({ target: rifftube.curTypeSel });
+}
+
+// timing and recording
+
+rifftube.timing_start = function()
+{
+    if (rifftube.recording) return;
+    
+    setFocus(rifftube.curDial);
+
+    //debugger;
+
+    console.log("start text")
+
+    rifftube.recording = true;
+
+    rifftube.curTimeBtn.innerHTML = "timing...";
+
+    rifftube.record_start_time = Date.now();
+}
+
+
+rifftube.timing_stop = function()
+{
+    if (!rifftube.recording) return;
+
+    console.log("end text")
+
+    rifftube.recording = false;
+
+    rifftube.curTimeBtn.innerHTML = "time";
+
+    rifftube.riff_duration = (Date.now() - rifftube.record_start_time) / 1000;
+
+    rifftube.curDur.value = rifftube.riff_duration;
+}
+
+function setFocus(el)
+{
+	let sfi = setInterval(
+		() =>
+		{
+			if (document.activeElement == el)
+				clearInterval(sfi);
+			console.log("set focus:", el, "active", document.activeElement);
+			el.focus();
+		},
+        500 //ms
+	)
+}
+
+rifftube.record_start = function()
+{
+    // make sure the recorder has been set up
+    if (!rifftube.recorderLoaded) return;
+
+    // ignore keypress (likely key repeat) if recording
+    if (rifftube.recording) return;
+
+    //debugger;
+
+    //let rootDiv = document.querySelector(".rifftube-riff-edit-dialog");
+    setFocus(rifftube.curDial);
+
+    //setFocus(document.body.firstElementChild);
+    //document.body.firstElementChild.focus();
+
+    console.log("start rec", rifftube)
+
+    rifftube.recording = true;
+
+    rifftube.curRecBtn.innerHTML = "recording..."
+
+    rifftube.record_start_time = Date.now();
+
+    rifftube.recorder.start();
+}
+
+
+rifftube.record_stop = function()
+{
+    if (!rifftube.recording) return;
+
+    rifftube.recorder.stop();
+
+    console.log("end rec", rifftube)
+
+    rifftube.recording = false;
+
+    rifftube.curRecBtn.innerHTML = "record"
+
+    rifftube.riff_duration = (Date.now() - rifftube.record_start_time) / 1000;
+
+    //debugger;
+    rifftube.curDur.value = rifftube.riff_duration;
+}
+
+function topLevel()
+{
+    return (window.top == window);
+}
+
+rifftube.sendMessage = function (type, detail, obj)
+{
+    if (topLevel())
+    {
+        let cust_event = new CustomEvent(type, { detail });
+        document.dispatchEvent(cust_event);
+    }
+    else
+    {
+        detail = obj || detail;
+        window.parent.postMessage( { type, detail }, "*" )
+    }
+    console.log("sent", topLevel(), type, detail);
+}
+
+rifftube.close_modal = function()
+{
+    //debugger;
+    rifftube.sendMessage("rifftube:riff:edit:close");
+}
+
+rifftube.save_riff = function(event)
+{
+    //debugger;
+
+    event.preventDefault();
+
+   // remove disabled attribute to send all fields
+    rifftube.curForm.querySelectorAll("[disabled]")
+        .forEach(el => el.removeAttribute("disabled"))
+
+    let body = new FormData(rifftube.curForm);
+    
+    let riff = {};
+    body.forEach((value, key) => riff[key] = value);
+    
+    // body (FormData) for rifftube website
+    // riff (Object) backup for extension
+    rifftube.sendMessage("rifftube:riff:edit:save", body, riff);
+}
+
+console.log("injected script running");
+
+//debugger;
+
+rifftube.rec_keydown = function(e)
+{
+    console.log("rec kd", rifftube.curTypeRad[2].checked);
+    //debugger;
+    if ( e.getModifierState("Control") ||
+            e.getModifierState("Alt") ||
+            e.getModifierState("Meta") )
+        return;
+
+    if (e.key == 'r')
+    {
+        if (rifftube.curTypeSel != rifftube.curTypeRad[0])
+        {
+            rifftube.curTypeRad[0].checked = true;
+            rifftube.curTypeSel = rifftube.curTypeRad[0];
+            rifftube.audioTypeUICallback({ target: rifftube.curTypeSel });
+        }
+        rifftube.record_start();
+    }
+    else if (e.key == 't')
+    {
+        if (rifftube.curTypeSel != rifftube.curTypeRad[2])
+        {
+            rifftube.curTypeRad[2].checked = true;
+            rifftube.curTypeSel = rifftube.curTypeRad[2];
+            rifftube.audioTypeUICallback({ target: rifftube.curTypeSel });
+        }
+        rifftube.curAutoChk.checked = false;
+        rifftube.timing_start();
+    }
+
+    e.stopPropagation();
+}
+
+rifftube.rec_keyup = function(e)
+{
+    if (e.key == 'r')
+    {
+        rifftube.record_stop();
+    }
+    else if (e.key == 't' && rifftube.curTypeRad[2].checked)
+    {
+        rifftube.timing_stop();
+    }
+}
+
+rifftube.audioTypeUICallback = function(e)
+{
+    console.log("atui", e);
+
+    rifftube.curTypeSel = e.target;
+
+    if ( e.target == rifftube.curTypeRad[0] ) // recorded audio
+    {
+        //debugger;
+        rifftube.curAutoChk.checked = true;
+        rifftube.curAutoChk.disabled = true;
+        rifftube.curDur.disabled = true;
+        //rifftube.curRecDiv.removeAttribute("hidden");
+        rifftube.curRecDiv.classList.remove("rifftube-riff-edit-anim-hide");
+        //rifftube.curTimeBtn.disabled = true;
+        //rifftube.curTimeDiv.setAttribute("hidden", true);
+        rifftube.curTimeDiv.classList.add("rifftube-riff-edit-anim-hide");
+        //rifftube.curSynthDiv.setAttribute("hidden", true);
+        rifftube.curSynthDiv.classList.add("rifftube-riff-edit-anim-hide");
+        rifftube.curShowChk.disabled = false;
+    }
+    else if ( e.target == rifftube.curTypeRad[1] ) // synth audio
+    {
+        rifftube.curAutoChk.checked = true;
+        rifftube.curAutoChk.disabled = true;
+        rifftube.curDur.disabled = true;
+        //rifftube.curRecDiv.setAttribute("hidden", true);
+        rifftube.curRecDiv.classList.add("rifftube-riff-edit-anim-hide");
+        //rifftube.curTimeBtn.disabled = true;
+        //rifftube.curTimeDiv.setAttribute("hidden", true);
+        rifftube.curTimeDiv.classList.add("rifftube-riff-edit-anim-hide");
+        //rifftube.curSynthDiv.removeAttribute("hidden");
+        rifftube.curSynthDiv.classList.remove("rifftube-riff-edit-anim-hide");
+        rifftube.curShowChk.disabled = false;
+    }
+    else if ( e.target == rifftube.curTypeRad[2] ) // no audio
+    {
+        //debugger;
+        // TODO: fix switch from type 1 to type 3 duration cache
+        if (rifftube.autoDurCache !== undefined)
+            rifftube.curAutoChk.checked = rifftube.autoDurCache;
+
+        rifftube.curShowChk.checked = true;
+        rifftube.curShowChk.disabled = true;
+        rifftube.curAutoChk.disabled = false;
+        rifftube.curDur.disabled = false;
+        //rifftube.curRecDiv.setAttribute("hidden", true);
+        rifftube.curRecDiv.classList.add("rifftube-riff-edit-anim-hide");
+        //rifftube.curSynthDiv.setAttribute("hidden", true);
+        rifftube.curSynthDiv.classList.add("rifftube-riff-edit-anim-hide");
+        //rifftube.curTimeBtn.disabled = false;
+        //rifftube.curTimeDiv.removeAttribute("hidden");
+        rifftube.curTimeDiv.classList.remove("rifftube-riff-edit-anim-hide");
+    }
+    rifftube.audioAutoDurUICallback({target: rifftube.curAutoChk});
+};
+
+rifftube.setInitialDuration = function()
+{
+    console.log("sid", rifftube.curPlayer.duration);
+    rifftube.curDur.value = rifftube.curPlayer.duration;
+};
+
+rifftube.lastTypeSel = rifftube.curTypeSel;
+
+// TODO: fix up duration
+// upadte cachedDur every time it changes? in timing end and it's input input event
+// better: create a set duration function to hold the logic
+rifftube.audioAutoDurUICallback = function(e)
+{
+    debugger;
+    console.log("aadui", rifftube.curTypeSel, e, e.target.checked);
+    rifftube.curDur.disabled = e.target.checked;
+    rifftube.curTimeBtn.disabled = e.target.checked;
+
+    if (rifftube.curTypeSel != rifftube.lastTypeSel)
+    {
+        if (rifftube.lastTypeSel == rifftube.curTypeRad[2])
+            rifftube.cachedDur = rifftube.curDur.value;
+
+        if (rifftube.lastTypeSel == rifftube.curTypeRad[1])
+            rifftube.cachedAudioDur = rifftube.curDur.value;
+    }
+
+    rifftube.lastTypeSel = rifftube.curTypeSel;
+
+    if ( rifftube.curTypeSel == rifftube.curTypeRad[0] ) // recorded audio
+    {
+        rifftube.curDur.classList.remove("rifftube-hidden");
+        rifftube.curDurAuto.classList.add("rifftube-hidden");
+
+        // duration may (will) be NaN at first,
+        // and should be skipped (leaving the value from the DB)
+        console.log(rifftube.curPlayer.duration);
+        if (!isNaN(rifftube.curPlayer.duration))
+        {
+            if (rifftube.curPlayer.duration == Infinity
+                    && rifftube.cachedAudioDur)
+                rifftube.curDur.value = rifftube.cachedAudioDur
+            else
+                rifftube.curDur.value = rifftube.curPlayer.duration;
+        }
+        
+        if (isNaN(rifftube.curPlayer.duration))
+            console.log("duration NaN");
+    }
+    else if ( rifftube.curTypeSel == rifftube.curTypeRad[1] ) // synth audio
+    {
+        rifftube.curDur.classList.add("rifftube-hidden");
+        rifftube.curDurAuto.classList.remove("rifftube-hidden");
+    }
+    else if ( rifftube.curTypeSel == rifftube.curTypeRad[2] ) // no audio
+    {
+        rifftube.curDur.value = rifftube.cachedDur || 0;
+            
+        if (e.target.checked)
+        {
+            rifftube.curDur.classList.add("rifftube-hidden");
+            rifftube.curDurAuto.classList.remove("rifftube-hidden");
+        }
+        else
+        {
+            rifftube.curDur.classList.remove("rifftube-hidden");
+            rifftube.curDurAuto.classList.add("rifftube-hidden");
+        }
+
+        rifftube.autoDurCache = e.target.checked;
+    }
+};
+
+rifftube.setupStartCallback = function(e)
+{
+    console.log(e);
+
+    rifftube.curStart.value = e.detail.start.toFixed(2);
+}
+
+rifftube.setupRecorderCallback = function(e)
+{
+    //console.log(e);
+
+    rifftube.recorder = e.detail.recorder; // new MediaRecorder(stream);
+
+    rifftube.chunks = [];
+    rifftube.recorder.ondataavailable = function(e)
+    {
+        rifftube.chunks.push(e.data);
+    }
+
+    rifftube.recorder.onstop = function(e)
+    {
+        console.log("recorder stopped, saving ", rifftube.recorder);
+
+        rifftube.temp_audio = new Blob(rifftube.chunks, { 'type' : rifftube.recorder.mimeType });
+        
+        rifftube.chunks = [];
+        
+        rifftube.audio_URL = URL.createObjectURL(duplicate_blob(rifftube.temp_audio));
+
+        rifftube.curPlayer.src = rifftube.audio_URL;
+
+        // Wrap audio blob as File; use DataTransfer to create a files object; assign to file input.
+        // This keeps the audio in place in case of navigation away and back.
+        // Other code reads it from the input and restores the audio player's src attr.
+        let file = new File([rifftube.temp_audio], `Recorded audio ${new Date().toLocaleTimeString()}`, {type: rifftube.recorder.mimeType, lastModified: Date.now()});
+        let container = new DataTransfer();
+        container.items.add(file);
+        rifftube.curFile.files = container.files;
+    }
+
+    //debugger;
+
+    rifftube.recorderLoaded = true;
+}
+
+rifftube.startRecordCallback = async function(e)
+{
+    console.log("sr", e);
+
+    if (e.detail.type == 'r')
+    {
+        rifftube.curTypeRad[0].checked = true;
+        rifftube.curTypeSel = rifftube.curTypeRad[0];
+        rifftube.audioTypeUICallback({ target: rifftube.curTypeSel });
+    }
+    else if (e.detail.type == 't')
+    {
+        rifftube.curTypeRad[2].checked = true;
+        rifftube.curTypeSel = rifftube.curTypeRad[2];
+        if (rifftube.curAutoChk.checked)
+            rifftube.curAutoChk.checked = false;
+        rifftube.audioTypeUICallback({ target: rifftube.curTypeSel });
+        rifftube.timing_start();
+    }
+
+    if (!rifftube.recorderLoaded)
+    {
+        await navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+            let mediaRecorder = new MediaRecorder(stream);
+            rifftube.setupRecorderCallback({detail: {recorder: mediaRecorder}});
+        });
+    }
+
+    rifftube.record_start();
+}
+
+rifftube.messageCallback = function(e)
+{
+    //console.log("edit form message", e.data);
+
+    //debugger;
+
+    if (!e.data.type) return;
+
+    let event = new CustomEvent(e.data.type,
+    {
+        detail: e.data.detail
+    });
+    rifftube.curDial.dispatchEvent(event);
+}
+
+rifftube.synth_playback = function (e)
+{
+    e.preventDefault();
+
+    const utterThis = new SpeechSynthesisUtterance(rifftube.curTextArea.value);
+    utterThis.voice = rifftube.synthVoice;
+    speechSynthesis.speak(utterThis);
+
+}
+
+rifftube.curTypeRad.forEach( el => el.addEventListener("change", rifftube.audioTypeUICallback) );
+rifftube.curAutoChk.addEventListener("change", rifftube.audioAutoDurUICallback);
+
+rifftube.curDial.addEventListener('keydown', rifftube.rec_keydown, false);
+rifftube.curDial.addEventListener('keyup', rifftube.rec_keyup, false);
+
+rifftube.curTextArea.addEventListener('keydown', e => e.stopPropagation(), false);
+
+//console.log("adding listener", rifftube.curDial);
+rifftube.curDial.addEventListener("rifftube:riff:edit:setup:recorder", rifftube.setupRecorderCallback, false);
+rifftube.curDial.addEventListener("rifftube:riff:edit:setup:start", rifftube.setupStartCallback, false);
+rifftube.curDial.addEventListener("rifftube:riff:edit:setup:anim", rifftube.animationPrep, false);
+rifftube.curDial.addEventListener("rifftube:riff:edit:start", rifftube.startRecordCallback, false);
+
+window.addEventListener("message", rifftube.messageCallback, false);
+
+rifftube.curPlayer.addEventListener("loadmetadata", rifftube.setInitialDuration);
+
+rifftube.curSynthPitchRange.addEventListener("input",
+    e => { rifftube.curSynthPitchNum.value = e.target.value; });
+rifftube.curSynthRateRange.addEventListener("input",
+    e => { rifftube.curSynthRateNum.value = e.target.value; });
+rifftube.curSynthPitchNum.addEventListener("input",
+    e => { rifftube.curSynthPitchRange.value = e.target.value; });
+rifftube.curSynthRateNum.addEventListener("input",
+    e => { rifftube.curSynthRateRange.value = e.target.value; });
+
+rifftube.updateVoiceExtras = function ()
+{
+    rifftube.curVoiceInfo.pitch = rifftube.curSynthPitchNum.value;
+    rifftube.curVoiceInfo.rate = rifftube.curSynthRateNum.value;
+}
+
+rifftube.curSynthPitchRange.addEventListener("input", rifftube.updateVoiceExtras);
+rifftube.curSynthRateRange.addEventListener("input", rifftube.updateVoiceExtras);
+rifftube.curSynthPitchNum.addEventListener("input", rifftube.updateVoiceExtras);
+rifftube.curSynthRateNum.addEventListener("input", rifftube.updateVoiceExtras);
+
+rifftube.curSynthPitchRange.addEventListener("input", rifftube.updateVoiceInfo);
+rifftube.curSynthRateRange.addEventListener("input", rifftube.updateVoiceInfo);
+rifftube.curSynthPitchNum.addEventListener("input", rifftube.updateVoiceInfo);
+rifftube.curSynthRateNum.addEventListener("input", rifftube.updateVoiceInfo);
+
+console.log("edit form loaded");
+
+//rifftube.curDial.showModal();
+
+//debugger;
+
+/*
+// not worthwhile:
+window.addEventListener("resize",
+    e =>
+    {
+        if (!document.body.scrollWidth || !document.body.scrollHeight) return;
+        console.log({ width: document.body.scrollWidth, height: document.body.scrollHeight });
+        if (!topLevel())
+            rifftube.sendMessage("rifftube:riff:edit:ext-ui-update",
+                {
+                    width: document.body.scrollWidth,
+                    height: document.body.scrollHeight
+                }
+            );
+    });
+*/
+
+rifftube.animationPrep();
+
+rifftube.curDial.focus();
+
+</script>

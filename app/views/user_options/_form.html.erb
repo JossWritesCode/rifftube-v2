@@ -1,0 +1,281 @@
+<%= form_with(scope: :user_options, url: "/user_options", method: "patch") do |form| %>
+  <% if user_options.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(user_options.errors.count, "error") %> prohibited this user_option from being saved:</h2>
+
+      <ul>
+        <% user_options.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+  <h3>Riffing Options:</h3>
+
+  <div>
+    <%= form.check_box :pause_to_riff %>
+    <%= form.label :pause_to_riff %>
+  </div>
+
+  <div>
+    <%= form.check_box :play_after_riff %>
+    <%= form.label :play_after_riff %>
+  </div>
+
+  <div>
+    <%= form.check_box :immediate_save %>
+    <%= form.label :immediate_save %>
+  </div>
+  
+  </div>
+
+  <div>
+  <h3>View Options:</h3>
+
+  <div>
+    <%= form.label :avatar_mode, "Avatar mode:", style: "display: block" %>
+    <!-- %= form.number_field :avatar_mode % -->
+
+    <%= form.collection_radio_buttons :avatar_mode,
+    [[1, "Popup"], [2, "Theater"], [0, "None"]],
+    :first, :last %>
+  </div>
+
+  <div>
+    <%= form.check_box :always_speak_text %>
+    <%= form.label :always_speak_text %>
+  </div>
+
+  <div>
+    <%= form.label :default_voice, style: "display: block" %>
+    <!-- %= form.text_field :default_voice % -->
+
+
+    <select id="rifftube-options-voice-sel">
+    </select>
+
+    <%= form.hidden_field :default_voice %>
+
+    <div>
+
+      Sample phrase: <input id="rifftube-options-synth-text" placeholder="watch out for snakes">
+
+      <button
+        type="button"
+        class="rifftube-synth-play-btn"
+        onclick="rifftube.synth_playback(event)">
+        ▶️
+      </button>
+
+    </div>
+
+    <details open id="rifftube-options-synth-adv-det">
+        <summary>Advanced Options</summary>
+        <div>
+            Pitch:
+            <input type="range" id="rifftube-options-synth-pitch" step="0.1" min="0.1" max="2" value="1">
+            <input type="number" id="rifftube-options-synth-pitch-num" step="0.1" min="0.1" max="2" value="1">
+            <button
+                onClick="rifftube.curSynthPitchNum.value=rifftube.curSynthPitchRange.value=1; event.preventDefault();">
+                Reset
+            </button>
+                
+        </div>
+        <div>
+            Rate:
+            <input type="range" id="rifftube-options-synth-rate" step="0.1" min="0.1" max="10" value="1">
+            <input type="number" id="rifftube-options-synth-rate-num" step="0.1" min="0.1" max="10" value="1">
+            <button
+                onClick="rifftube.curSynthRateNum.value=rifftube.curSynthRateRange.value=1; event.preventDefault();">
+                Reset
+            </button>
+        </div>
+    </details>
+
+</div>
+
+  </div>
+
+  <div>
+    <%= form.label :auto_duration_word_rate, "Auto-determined duration calculation:", style: "display: block" %>
+    <!-- %= form.label :auto_duration_word_rate, style: "display: block" % -->
+    N ✖️ <%= form.text_field :auto_duration_word_rate, style: "width: 3em" %> s
+    <!-- %= form.label :auto_duration_constant, style: "display: block" % -->
+    ➕ <%= form.text_field :auto_duration_constant, style: "width: 3em" %> s
+    <br>
+    (N = number of words in riff)
+  </div>
+
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+
+
+<script>
+
+var divSel = ".rifftube-edit-options-div";
+var curDiv = document.querySelector(divSel);
+
+var rifftube = window.rifftube || {};
+
+rifftube.curDiv = curDiv;
+rifftube.curForm = rifftube.curDiv.querySelector("form");
+
+rifftube.curVoicesSel = rifftube.curDiv.querySelector("#rifftube-options-voice-sel");
+rifftube.curVoice = rifftube.curForm.querySelector("[name='user_options[default_voice]']");
+rifftube.curSynthPitchRange = rifftube.curDiv.querySelector("#rifftube-options-synth-pitch");
+rifftube.curSynthRateRange = rifftube.curDiv.querySelector("#rifftube-options-synth-rate");
+rifftube.curSynthPitchNum = rifftube.curDiv.querySelector("#rifftube-options-synth-pitch-num");
+rifftube.curSynthRateNum = rifftube.curDiv.querySelector("#rifftube-options-synth-rate-num");
+
+rifftube.setVoiceInfo = function (voice)
+{
+    rifftube.curVoiceInfo =
+        {
+            name: voice.name,
+            lang: voice.lang,
+            pitch: 1,
+            rate: 1
+        };
+    rifftube.updateVoiceInfo();
+}
+
+rifftube.updateVoiceInfo = function ()
+{
+    rifftube.curVoice.value = JSON.stringify(rifftube.curVoiceInfo);
+}
+
+rifftube.getVoices = function()
+{
+    let voices = speechSynthesis.getVoices();
+    //console.log(voices);
+
+    let sysInd;
+    let voiceFound = false;
+
+    rifftube.curVoicesSel.innerHTML = "";
+
+    let voiceInfo =
+        rifftube.curVoice.value ?
+            JSON.parse(rifftube.curVoice.value)
+        :
+            null;
+    rifftube.curVoiceInfo = voiceInfo;
+
+    // set pitch and rate controls
+    if (voiceInfo)
+    {
+        rifftube.curSynthPitchRange.value = rifftube.curSynthPitchNum.value = voiceInfo.pitch;
+        rifftube.curSynthRateRange.value = rifftube.curSynthRateNum.value = voiceInfo.rate;
+    }
+    else
+    {
+        rifftube.curSynthPitchRange.value = rifftube.curSynthPitchNum.value = 1;
+        rifftube.curSynthRateRange.value = rifftube.curSynthRateNum.value = 1;
+    }
+
+    // search for voice language + name in list
+    for (let i = 0; i < voices.length; i++)
+    {
+        const voice = voices[i];
+        //console.log(voice);
+        const option = document.createElement("option");
+        option.textContent = `${voice.name} (${voice.lang})`;
+
+        option.dataset.voiceID = `${voice.lang}/${voice.name}`;
+        option.voice = voice;
+
+        rifftube.curVoicesSel.appendChild(option);
+
+        if (voice.default) {
+            option.textContent += " (System Default)";
+            sysInd = i;
+        }
+
+        // voiceInfo may be null
+        if (voiceInfo?.lang == voice.lang && voiceInfo?.name == voice.name)
+        {
+            rifftube.curVoicesSel.selectedIndex = i;
+            voiceFound = true;
+            rifftube.synthVoice = voice;
+        }
+    }
+
+    // if not found, use default
+    if (!voiceFound)
+    {
+        rifftube.curVoicesSel.selectedIndex = sysInd;
+        rifftube.synthVoice = voices[sysInd];
+        // leave the info alone if it exists (don't overwrite if not voice found)
+        // otherwise fill in with default (if found -- they aren't loaded at first?)
+        if (!rifftube.curVoiceInfo && rifftube.synthVoice)
+            rifftube.setVoiceInfo(rifftube.synthVoice);
+    }
+}
+
+rifftube.curVoicesSel.addEventListener("change",
+    e =>
+    {
+        const opt = e.target[e.target.selectedIndex];
+        console.log(e, opt.voice);
+        let voiceID = e.target.dataset.voiceID;
+        rifftube.curVoice.value = voiceID;
+        rifftube.synthVoice = opt.voice;
+        rifftube.setVoiceInfo(opt.voice);
+    }
+);
+
+rifftube.synth_playback = function (e)
+{
+    e.preventDefault();
+
+    const textEl = document.querySelector("#rifftube-options-synth-text");
+    const text = textEl.value || textEl.placeholder;
+    const utterThis = new SpeechSynthesisUtterance(text);
+    utterThis.voice = rifftube.synthVoice;
+    utterThis.pitch = rifftube.curSynthPitchNum.value
+    utterThis.rate = rifftube.curSynthRateNum.value
+    speechSynthesis.speak(utterThis);
+
+}
+
+rifftube.getVoices();
+
+speechSynthesis.addEventListener("voiceschanged",
+    e =>
+    {
+        rifftube.getVoices();
+    }
+);
+
+rifftube.curSynthPitchRange.addEventListener("input",
+    e => { rifftube.curSynthPitchNum.value = e.target.value; });
+rifftube.curSynthRateRange.addEventListener("input",
+    e => { rifftube.curSynthRateNum.value = e.target.value; });
+rifftube.curSynthPitchNum.addEventListener("input",
+    e => { rifftube.curSynthPitchRange.value = e.target.value; });
+rifftube.curSynthRateNum.addEventListener("input",
+    e => { rifftube.curSynthRateRange.value = e.target.value; });
+
+rifftube.updateVoiceExtras = function ()
+{
+    rifftube.curVoiceInfo.pitch = rifftube.curSynthPitchNum.value;
+    rifftube.curVoiceInfo.rate = rifftube.curSynthRateNum.value;
+}
+
+rifftube.curSynthPitchRange.addEventListener("input", rifftube.updateVoiceExtras);
+rifftube.curSynthRateRange.addEventListener("input", rifftube.updateVoiceExtras);
+rifftube.curSynthPitchNum.addEventListener("input", rifftube.updateVoiceExtras);
+rifftube.curSynthRateNum.addEventListener("input", rifftube.updateVoiceExtras);
+
+rifftube.curSynthPitchRange.addEventListener("input", rifftube.updateVoiceInfo);
+rifftube.curSynthRateRange.addEventListener("input", rifftube.updateVoiceInfo);
+rifftube.curSynthPitchNum.addEventListener("input", rifftube.updateVoiceInfo);
+rifftube.curSynthRateNum.addEventListener("input", rifftube.updateVoiceInfo);
+
+</script>

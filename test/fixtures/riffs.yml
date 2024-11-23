@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  audio: 
+  duration: 1.5
+  start: 1.5
+  text: MyText
+  rating: 1
+  isText: false
+  user_id: 1
+  video_id: 1
+
+two:
+  audio: 
+  duration: 1.5
+  start: 1.5
+  text: MyText
+  rating: 1
+  isText: false
+  user_id: 1
+  video_id: 1

@@ -1,0 +1,128 @@
+<h1>Rifftube#riff</h1>
+<p>do eet</p>
+
+<p>
+<%= @video.inspect %>
+</p>
+
+<p>
+<%= current_user.inspect %>
+</p>
+
+<% if logged_in? %>
+  <%= link_to 'logout', '/logout', data: { turbo_method: :delete } %>
+
+  <script>
+
+    window.rifftube = {};
+
+    let chunks = [];
+
+    if (navigator.mediaDevices)
+    {
+        navigator.mediaDevices
+            .getUserMedia({ audio: true, video: false })
+            .then((stream) => {
+                window.rifftube.stream = stream;
+                
+                window.rifftube.recorder = new MediaRecorder(stream);
+            
+                window.rifftube.recorder.ondataavailable = function(e) {
+                chunks.push(e.data);
+                }
+            
+                window.rifftube.recorder.onstop = function(e)
+                {
+                console.log("recorder stopped, saving ", window.rifftube.recorder.mimeType);
+
+                const blob = new Blob(chunks, { 'type' : window.rifftube.recorder.mimeType });
+                chunks = [];
+
+                let fd = new FormData()
+                fd.append("blob", blob);
+
+                var csrfToken = "X"; //document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+
+                fetch("/riffs", {
+                        method: 'POST',
+                        //headers: { 'X-CSRF-Token': csrfToken, },
+                        body: fd
+                    })
+                        .then(response => response.json())
+                        .then(response => console.log(response))
+                        .catch(error => console.log('Error:', error));
+                }
+
+            })
+            .catch(function (err) {
+                //enable the record button if getUSerMedia() fails
+                console.log("oops, can't get stream", err);
+            });
+    }
+
+    function startRecord()
+    {
+        console.log("keydown");
+        //debugger;
+        //this.state.mediaRecorder.start();
+        
+        window.rifftube.riffStart = Date.now();
+
+        //start the recording process
+        setTimeout( () => window.rifftube.recorder.start(), 200 ); // delay start to avoid clicks and taps
+    }
+
+
+    function endRecord()
+    {
+        //debugger;
+        
+        window.rifftube.riffDuration = (Date.now() - window.rifftube.riffStart) / 1000;
+
+        // experimenting this.state.gumStream.getAudioTracks()[0].stop();
+        window.rifftube.recorder.stop();
+    }
+
+    function keyDown(e)
+    {
+        if (!e.getModifierState("control") && !e.getModifierState("meta"))
+        {
+            if (e.key == "r")
+            {
+                if (window.rifftube.redLight)
+                    return;
+                window.rifftube.redLight = true;
+
+                startRecord();
+                
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+        }
+    }
+
+    function keyUp(e)
+    {
+        if (e.key == "r")
+        {
+            if (window.rifftube.redLight)
+            {
+                window.rifftube.redLight = false;
+                console.log("keyup");
+                //debugger;
+
+                endRecord();
+            }
+        }
+        
+}
+
+    window.addEventListener("keydown", keyDown);
+    window.addEventListener("keyup", keyUp);
+
+  </script>
+
+<% else %>
+<%= link_to 'login', '/login' %>
+<% end %>

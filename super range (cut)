@@ -1,0 +1,57 @@
+
+<script>
+class SuperRange extends HTMLElement
+{
+  constructor()
+  {
+    // Always call super first in constructor
+    super();
+  }
+
+  connectedCallback()
+  {
+    // Create a shadow root
+    this.attachShadow({ mode: "open" }); // sets and returns 'this.shadowRoot'
+
+    // Create (nested) span elements
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("rifftube-riff-edit-custom-range-wrapper");
+    const range = wrapper.appendChild(document.createElement("range"));
+    range.classList.add("rifftube-riff-edit-custom-range-range");
+    range.setAttribute("tabindex", 0);
+    const number = wrapper.appendChild(document.createElement("number"));
+    number.classList.add("rifftube-riff-edit-custom-range-number");
+    number.setAttribute("tabindex", 0);
+
+    const atts = ["min", "max", "step"];
+    atts.forEach(
+        attr =>
+        {
+            if (this.hasAttribute(attr))
+            {
+                range[attr] = this.getAttribute(attr);
+                number[attr] = this.getAttribute(attr);
+            }
+        }
+    )
+
+    /*
+    // Create some CSS to apply to the shadow DOM
+    const style = document.createElement("style");
+    style.textContent = `.rifftube-riff-edit-custom-range-wrapper {
+        ...
+    }`;
+
+    this.shadowRoot.append(style, wrapper);
+    */
+
+    // attach the created elements to the shadow DOM
+    this.shadowRoot.append(wrapper);
+  }
+}
+
+customElements.define("super-range", SuperRange);
+
+</script>
+
+<super-range min="0" max="5" step="0.25"></super-range>

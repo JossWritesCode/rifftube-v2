@@ -1,0 +1,18 @@
+<h1><%= @user.name %></h1>
+
+<ul>
+  <% @user.videos.distinct.each do |video| %>
+    <li>
+        <%= video.host %> / <%= video.url %>
+        <ul>
+          <% video.riffs.each do |riff| %>
+            <li>
+              <audio controls
+                src="/riffs/<%= riff.id %>">
+              </audio>
+            </li>
+          <% end %>
+        </ul>
+    </li>
+  <% end %>
+</ul>

@@ -1,0 +1,2 @@
+module RifftubeHelper
+end

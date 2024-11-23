@@ -1,0 +1,44 @@
+<%= form_with model: @riff do |form| %>
+
+    <%= form.number_field :start, step: 0.5, onChange: "rifftube.update_start(this)" %>
+
+<% end %>
+
+<script>
+
+var rifftube = rifftube || {};
+
+rifftube.curScript = document.currentScript;
+rifftube.curDial = rifftube.curScript.parentElement;
+rifftube.curForm = rifftube.curDial.querySelector("form");
+
+rifftube.update_start = function(el)
+{
+    if (rifftube.update_start_timeout)
+    {
+        clearTimeout(rifftube.update_start_timeout);
+    }
+
+    rifftube.update_start_timeout = setTimeout(() =>
+    {
+        let body = new FormData(rifftube.curForm);
+
+        fetch(`${rifftube.curForm.action}?fields=start`, {
+            method: "PATCH", //rifftube.curForm.method,
+            body,
+        }).then(res =>
+        {
+            const event = new CustomEvent("rifftube:riff:save:success", { detail: { id: <%= @id %>, } });
+            document.dispatchEvent(event);
+            console.log(event);
+        }).catch(err =>
+        {
+            console.log(err);
+            const event = new CustomEvent("rifftube:riff:save:error", { detail: { id: <%= @id  %>, err } });
+            document.dispatchEvent(event);
+            console.log(event);
+        })
+    }, 250);
+}
+
+</script>

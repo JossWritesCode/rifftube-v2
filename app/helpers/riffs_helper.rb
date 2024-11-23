@@ -1,0 +1,2 @@
+module RiffsHelper
+end
