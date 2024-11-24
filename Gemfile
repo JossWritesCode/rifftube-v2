@@ -8,7 +8,8 @@ ruby "3.1.2"
 # needed?
 gem "rack-cors"
 
-
+# YouTube video info
+gem "video_info"
 
 gem "zip"
 

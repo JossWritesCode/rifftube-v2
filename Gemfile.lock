@@ -68,6 +68,8 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    ansi (1.5.0)
+    ast (2.4.2)
     base64 (0.2.0)
     bcrypt (3.1.20)
     bindex (0.8.1)
@@ -117,6 +119,7 @@ GEM
     irb (1.14.1)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    iso8601 (0.13.0)
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
@@ -151,6 +154,7 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
+    net_http_timeout_errors (1.0.0)
     nio4r (2.7.4)
     nokogiri (1.16.7)
       mini_portile2 (~> 2.8.2)
@@ -159,6 +163,9 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
+    oga (3.4)
+      ast
+      ruby-ll (~> 2.1)
     os (1.1.4)
     pg (1.5.9)
     psych (5.2.0)
@@ -210,6 +217,9 @@ GEM
     reline (0.5.10)
       io-console (~> 0.5)
     rexml (3.3.9)
+    ruby-ll (2.1.3)
+      ansi
+      ast
     rubyzip (2.3.2)
     selenium-webdriver (4.10.0)
       rexml (~> 3.2, >= 3.2.5)
@@ -240,6 +250,10 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (1.0.0)
+    video_info (4.2.0)
+      iso8601 (~> 0.13.0)
+      net_http_timeout_errors (~> 1.0.0)
+      oga (~> 3.4)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -283,6 +297,7 @@ DEPENDENCIES
   streamio-ffmpeg (~> 3.0)
   turbo-rails
   tzinfo-data
+  video_info
   web-console
   webdrivers
   zip

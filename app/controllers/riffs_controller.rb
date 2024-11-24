@@ -63,7 +63,21 @@ class RiffsController < ApplicationController
             recode_audio
             params[:riff][:user_id] = @current_user.id
             vid_url = params[:riff][:video_id];
-            params[:riff][:video_id] = Video.find_by(url: vid_url).id
+            video = Video.find_by(url: vid_url)
+            if video.nil?
+                VideoInfo.provider_api_keys = { youtube: ENV["YOUTUBE_DATA_API"] }
+                vidinf = VideoInfo.new("http://www.youtube.com/watch?v=#{vid_url}")
+
+                video = Video.new
+                video.url = vid_url
+                video.title = vidinf.title
+                video.duration = vidinf.duration
+                video.host = "youtube.com"
+                if not video.save
+                    render plain: "Error saving riff, creating video record", status: :internal_server_error and return
+                end
+            end
+            params[:riff][:video_id] = video.id
             
             print riff_params.inspect
 
