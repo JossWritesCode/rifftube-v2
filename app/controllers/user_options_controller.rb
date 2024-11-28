@@ -38,7 +38,7 @@ class UserOptionsController < ApplicationController
         @user_options = @current_user.user_options
         if @user_options.nil?
           @user_options = UserOptions.new
-          @user_options.user = @user
+          @user_options.user = @current_user
           @user_options.save
         end
       end
