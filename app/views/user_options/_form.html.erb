@@ -1,8 +1,8 @@
 <%= form_with(scope: :user_options, url: "/user_options", method: "patch") do |form| %>
+
   <% if user_options.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(user_options.errors.count, "error") %> prohibited this user_option from being saved:</h2>
-
       <ul>
         <% user_options.errors.each do |error| %>
           <li><%= error.full_message %></li>
