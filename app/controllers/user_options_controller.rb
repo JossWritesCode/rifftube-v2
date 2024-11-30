@@ -1,13 +1,18 @@
 class UserOptionsController < ApplicationController
-  before_action :set_user_options, only: %i[ show edit ]
+  before_action :set_user_options, only: %i[ show edit view_edit ]
 
   # GET /user_options/1
   def show
     render json: @user_options.as_json
   end
 
-  # GET /user_options/1/edit
+  # GET /user_options/edit
   def edit
+    render layout: false
+  end
+
+  # GET /user_options/view_edit
+  def view_edit
     render layout: false
   end
 

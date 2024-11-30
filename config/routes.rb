@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   get 'user_options', to: "user_options#show"
   get 'user_options/edit', to: "user_options#edit"
+  get 'user_options/view_edit', to: "user_options#view_edit"
   patch 'user_options', to: "user_options#update"
   
   #get 'user_options/local/:id', to: "user_options#local"
