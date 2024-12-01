@@ -3,7 +3,8 @@ class UserOptionsController < ApplicationController
 
   # GET /user_options/1
   def show
-    render json: @user_options.as_json
+    render json: @user_options
+    #render json: @user_options.as_json
   end
 
   # GET /user_options/edit
@@ -46,6 +47,9 @@ class UserOptionsController < ApplicationController
           @user_options.user = @current_user
           @user_options.save
         end
+      else
+        # if not logged in, return empty hash
+        @user_options = {}
       end
     end
 

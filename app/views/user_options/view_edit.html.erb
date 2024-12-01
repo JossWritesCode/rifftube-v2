@@ -1,10 +1,25 @@
-<dialog class="rifftube-edit-view-options-dialog">
+<dialog id="rifftube-edit-view-options-dialog">
 
-<%= form_with(scope: :user_options) do |form| %>
+<%= form_with(scope: :user_options, html: {method: "dialog"}) do |form| %>
 
 <%= render "view_options_form", form: form %>
 
-<button type="submit" formmethod="dialog">Submit</button>
+<script>
+let dial = document.querySelector("#rifftube-edit-view-options-dialog");
+let fel = dial.querySelector("form");
+
+function backgroundSubmit(e)
+{
+    // not needed
+    //e.preventDefault();
+
+    let fd = new FormData(fel);
+
+
+}
+</script>
+
+<button type="submit" formmethod="dialog" onclick="backgroundSubmit(event)">Submit</button>
 
 <% end %>
 
