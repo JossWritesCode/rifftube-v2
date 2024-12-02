@@ -1,5 +1,7 @@
 <%= form_with(scope: :user_options, url: "/user_options", method: "patch") do |form| %>
 
+<div id="rifftube-edit-riff-options-div">
+
   <% if user_options.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(user_options.errors.count, "error") %> prohibited this user_option from being saved:</h2>
@@ -11,7 +13,6 @@
     </div>
   <% end %>
 
-  <div id="rifftube-edit-riff-options-div">
   <h3>Riffing Options:</h3>
 
   <div>
@@ -45,14 +46,11 @@
 </button>
 </div>
 
-</div>
-
 <% end %>
-
 
 <script>
 
-var dialSel = "#rifftube-edit-riff-options-div";
+var dialSel = "#rifftube-edit-options-div";
 var curDial = document.querySelector(dialSel);
 
 var rifftube = window.rifftube || {};
