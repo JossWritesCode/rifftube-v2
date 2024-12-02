@@ -33,7 +33,79 @@
 
   <%= render "view_options_form", form: form %>
 
-  <div>
-    <%= form.submit %>
-  </div>
+<div style="margin-top: 1em;">
+<button
+    onClick="rifftube.close_modal(); event.preventDefault();">
+    Cancel
+</button>
+
+<button
+    onClick="rifftube.save_options(event);">
+    Save
+</button>
+</div>
+
+</div>
+
 <% end %>
+
+
+<script>
+
+var dialSel = "#rifftube-edit-riff-options-div";
+var curDial = document.querySelector(dialSel);
+
+var rifftube = window.rifftube || {};
+
+rifftube.curDial = curDial;
+rifftube.curForm = rifftube.curDial.querySelector("form");
+
+
+rifftube.topLevel = function ()
+{
+    return (window.top == window);
+}
+
+rifftube.sendMessage = function (type, detail, obj)
+{
+    if (rifftube.topLevel())
+    {
+        let cust_event = new CustomEvent(type, { detail });
+        document.dispatchEvent(cust_event);
+    }
+    else
+    {
+        detail = obj || detail;
+        window.parent.postMessage( { type, detail }, "*" )
+    }
+    console.log("sent", rifftube.topLevel(), type, detail);
+}
+
+rifftube.close_modal = function()
+{
+    //debugger;
+    rifftube.sendMessage("rifftube:options:cancel");
+}
+
+rifftube.save_options = function(event)
+{
+    //debugger;
+
+    event.preventDefault();
+
+    // remove disabled attribute to send all fields
+    rifftube.curForm.querySelectorAll("[disabled]")
+        .forEach(el => el.removeAttribute("disabled"))
+
+    let body = new FormData(rifftube.curForm);
+    
+    // TODO: maybe: move this bit to sendMessage
+    let opts = {};
+    body.forEach((value, key) => opts[key] = value);
+    
+    // body (FormData) for rifftube website
+    // riff (Object) backup for extension
+    rifftube.sendMessage("rifftube:options:save", body, opts);
+}
+
+</script>
