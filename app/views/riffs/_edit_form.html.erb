@@ -438,6 +438,9 @@ rifftube.record_stop = function()
 
     //debugger;
     rifftube.curDur.value = rifftube.riff_duration;
+
+    // send msg to react app which may send another msg back to save
+    rifftube.sendMessage("rifftube:riff:edit:riff:finish");
 }
 
 function topLevel()
@@ -782,6 +785,9 @@ rifftube.curDial.addEventListener("rifftube:riff:edit:setup:recorder", rifftube.
 rifftube.curDial.addEventListener("rifftube:riff:edit:setup:start", rifftube.setupStartCallback, false);
 rifftube.curDial.addEventListener("rifftube:riff:edit:setup:anim", rifftube.animationPrep, false);
 rifftube.curDial.addEventListener("rifftube:riff:edit:start", rifftube.startRecordCallback, false);
+
+// message from front-end to save immediately
+rifftube.curDial.addEventListener("rifftube:riff:edit:save", rifftube.save_riff, false);
 
 window.addEventListener("message", rifftube.messageCallback, false);
 
