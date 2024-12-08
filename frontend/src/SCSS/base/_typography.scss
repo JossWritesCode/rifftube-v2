@@ -1,0 +1,35 @@
+@use "../abstract/variables";
+
+a:hover {
+  color: variables.$color-primary;
+}
+
+.heading-primary-main {
+  font-size: variables.$extra-large;
+  color: variables.$color-gray;
+  font-weight: 700;
+  margin: variables.$small;
+  font-family: Limelight;
+
+  // @media (min-width: 700px) {
+  //   font-size: $extra-large;
+  // }
+}
+
+.heading-name {
+  font-size: variables.$large;
+  color: variables.$color-white;
+  font-weight: 700;
+  margin: variables.$small;
+  margin-top: 3rem;
+  font-family: Limelight;
+}
+
+.heading-qa {
+  font-size: variables.$large;
+  color: variables.$color-black;
+  font-weight: 700;
+  margin: variables.$small;
+  margin-top: 3rem;
+  font-family: Limelight;
+}

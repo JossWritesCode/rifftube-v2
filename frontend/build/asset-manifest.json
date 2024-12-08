@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.82f1f6af.css",
+    "main.js": "/static/js/main.a201b10c.js",
+    "static/media/Limelight-Regular.ttf": "/static/media/Limelight-Regular.4a21effdfa33ba76fdac.ttf",
+    "static/media/undraw_movie_night_93wl.svg": "/static/media/undraw_movie_night_93wl.99686c83c3c342ffb03556c17e36d291.svg",
+    "static/media/undraw_horror_movie_3988.svg": "/static/media/undraw_horror_movie_3988.6cddbf131509c15489e4273eee09d5f7.svg",
+    "index.html": "/index.html",
+    "static/media/settings_voice-24px.svg": "/static/media/settings_voice-24px.e04dcec3b06a8d1fb5ea0b17595f826e.svg",
+    "static/media/chat-24px.svg": "/static/media/chat-24px.c2d7a9464022555f04549abb925e9189.svg",
+    "main.82f1f6af.css.map": "/static/css/main.82f1f6af.css.map",
+    "main.a201b10c.js.map": "/static/js/main.a201b10c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.82f1f6af.css",
+    "static/js/main.a201b10c.js"
+  ]
+}

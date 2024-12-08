@@ -1,0 +1,46 @@
+@use "../abstract/variables";
+
+.navbar {
+  font-size: 3vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  top: 0;
+  left: 0;
+
+
+  .heading-primary-nav {
+    font-size: variables.$medium;
+    color: variables.$color-gray;
+    font-weight: 700;
+    font-family: Limelight;
+
+  // @media (min-width: 700px) {
+  //   font-size: $extra-large;
+  // }
+  }
+
+  a.navbar-home-link-active span.heading-primary-nav {
+    color: variables.$color-primary;
+  }
+
+  .navbar-link-active {
+    border-bottom: 3px solid variables.$color-primary;
+    transition: border-bottom 0.5s ease-in-out;
+  }
+  a {
+    margin-left: 2rem;
+
+    @media (min-width: 700px) {
+      margin-left: 5rem;
+    }
+
+    &:hover {
+      color: variables.$color-primary !important;
+    }
+  }
+
+  @media (min-width: 700px) {
+    font-size: variables.$medium;
+  }
+}

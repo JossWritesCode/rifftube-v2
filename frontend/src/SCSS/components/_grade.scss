@@ -1,0 +1,27 @@
+.user-grade-control-container {
+    margin: auto;
+    width: max-content;
+}
+
+.user-grade-control-container > h4 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: auto;
+}
+
+.user-grade-control-container > label {
+    font-size: 5rem;
+    filter: saturate(25%);
+    display: inline-block;
+    margin: 0 1rem;
+}
+
+.user-grade-control-container > label:has(input:checked) {
+    filter: initial;
+}
+
+.user-grade-control-container input[type=radio] {
+    display: block;
+    margin: auto;;
+}

@@ -1,0 +1,103 @@
+@use "../abstract/variables";
+
+button {
+  background-color: #202020;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  margin: 5px;
+  padding: 5px;
+}
+
+button.light {
+  background-color: revert;
+  color: initial;
+}
+
+button:disabled {
+  background-color: #868686;
+  color: rgb(70, 70, 70);
+}
+
+button:active {
+  position: relative;
+  top: 0.1em;
+  left: 0.1em;
+}
+
+.riff-button {
+  background-color: variables.$color-gray;
+  color: variables.$color-white;
+  border-radius: 5px;
+  width: 5rem;
+  height: 5rem;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid variables.$color-gray;
+
+  &:hover {
+    background-color: variables.$color-white;
+    color: variables.$color-gray;
+  }
+}
+
+#change-video-btn {
+  background-color: variables.$color-dark-gray !important;
+  border: 1px solid variables.$color-gray;
+  color: variables.$color-white;
+
+  &:hover {
+    background-color: variables.$color-white !important;
+    color: variables.$color-black;
+  }
+}
+
+.riff-button-delete {
+  background-color: variables.$color-primary;
+  color: variables.$color-white;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid variables.$color-primary;
+
+  &:hover {
+    background-color: variables.$color-white;
+    color: variables.$color-primary;
+  }
+}
+
+.btn {
+  background-color: variables.$color-primary;
+  border-radius: 5px;
+  color: variables.$color-white;
+  border: none;
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid variables.$color-primary;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: variables.$color-white;
+  border: 1px solid variables.$color-primary;
+  color: variables.$color-primary;
+}
+
+.get-started-btn {
+  height: 3rem;
+  width: 11.5rem;
+  text-align: center;
+  display: flex;
+  font-size: variables.$small;
+  justify-content: center;
+  align-items: center;
+  @media (min-width: 700px) {
+    text-align: center;
+    height: 3rem;
+    width: 11.5rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

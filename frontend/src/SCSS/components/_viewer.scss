@@ -1,0 +1,145 @@
+
+.rifftube-riffers {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 35%;
+    display: flex;
+    flex-direction: row;
+}
+
+.rifftube-riffers::before, .rifftube-riffers::after {
+content: '';
+}
+
+.rifftube-riffers::before {
+flex: 1 0 0;
+}
+
+.rifftube-riffers::after {
+flex: 2 0 0;
+}
+
+.rifftube-riffers > div > img {
+height: 100%;
+}
+
+/* to prevent flicker: */
+.rifftube-riffers > div {
+max-width: 0;
+}
+
+.rifftube-riffers > div:only-child {
+max-width: initial !important; /* just needs to override the two rulesets below */
+}
+
+.rifftube-riffers > div {
+position: relative;
+animation-duration: 0.5s;
+animation-fill-mode: forwards;
+animation-timing-function: ease-out;
+animation-name: make-room;
+}
+
+.rifftube-riffers > div.hiding {
+animation-duration: 0.5s;
+animation-fill-mode: forwards;
+animation-timing-function: ease-out;
+animation-name: take-room;
+}
+
+.rifftube-riffers > div > img {
+position: relative;
+animation-duration: 0.5s;
+animation-fill-mode: forwards;
+animation-timing-function: ease-out;
+animation-name: pop-up;
+}
+
+.rifftube-riffers > div.hiding > img {
+animation-duration: 0.5s;
+animation-fill-mode: forwards;
+animation-timing-function: ease-out;
+animation-name: exit-pursued-by-bear;
+}
+
+.rifftube-riffers > div > div.rifftube-text-riff {
+animation-duration: 0.5s;
+animation-fill-mode: forwards;
+animation-timing-function: ease-out;
+animation-name: fadein;
+}
+
+.rifftube-riffers > div.hiding > div.rifftube-text-riff {
+animation-duration: 0.5s;
+animation-fill-mode: forwards;
+animation-timing-function: ease-out;
+animation-name: fadeout;
+}
+
+@keyframes make-room {
+    from {
+    max-width: 0%;
+    }
+    
+    to {
+    max-width: 50%;
+    }
+}
+
+@keyframes take-room {
+    from {
+    max-width: 50%;
+    }
+    
+    to {
+    max-width: 0%;
+    }
+}
+
+@keyframes pop-up {
+    from {
+    bottom: -100%;
+    /*transform: scaleX(0);*/
+    }
+
+    to {
+    bottom: 0%;
+    /*transform: scaleX(100%);*/
+    }
+}
+
+@keyframes exit-pursued-by-bear {
+    from {
+    bottom: 0%;
+    /*transform: scaleX(100%);
+    max-width: 50%;*/
+    }
+
+    to {
+    bottom: -100%;
+    /*transform: scaleX(0);
+    max-width: 0%;*/
+    }
+}
+
+@keyframes fadein {
+    from {
+    opacity: 0%;
+    }
+
+    to {
+    opacity: 100%;
+    }
+}
+
+@keyframes fadeout {
+    from {
+    opacity: 100%;
+    }
+
+    to {
+    opacity: 0%;
+    }
+}
