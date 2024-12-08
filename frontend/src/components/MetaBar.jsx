@@ -4,11 +4,10 @@ import { setMetaBarPlayhead } from '../actions';
 
 const MetaBar = ({ riffsMeta, riffs, duration, metaBarPlayhead, setMetaBarPlayhead }) =>
 {
+  /*
   const [state, setState] = useState({ names: [], muted: {}, filteredRiffs: [], all: true });
   const [search, setSearch] = useSearchParams();
-
-  // TODO: remove cocmment again
-  // and more asd
+  */
 
   useEffect( () => {setMetaBarPlayhead(createRef())}, []);
 
