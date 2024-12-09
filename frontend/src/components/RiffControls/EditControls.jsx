@@ -45,7 +45,7 @@ const EditControls = (props) =>
     }
 
     return () => clearInterval(focInt);
-  }, [])
+  }, [props.loggedIn])
 
   let cancelHandler = e => { console.log("dial cancel"); closeDial(); e.preventDefault(); };
 
