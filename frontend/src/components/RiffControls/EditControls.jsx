@@ -23,11 +23,12 @@ const EditControls = (props) =>
   // needed to send the immediate save message
   const [editEl, setEditEl] = useState(null);
 
-  // enforce focus on body
+  // enforce focus on body once a second
   useEffect( () =>
   {
     const body = document.body;
     body.setAttribute("tabIndex", 1);
+    const focInt = setInterval(resetFocus, 1000);
     function resetFocus()
     {
       // allow focus to leave the body if not logged in
@@ -35,22 +36,15 @@ const EditControls = (props) =>
 
       // allow focus to leave the body if editing dialog is open
       if (document.querySelector('.rifftube-riff-edit-dialog')) return;
-
-      // TODO: fix?
-      // I hate this use of timeout so. much.
-      // but it seems necessary
-      setTimeout( () =>
+      
+      if (document.activeElement !== body)
       {
         body.focus();
         console.log("reset focus", document.activeElement);
-        // this seems to be unnecessary, but who knows!?
-        if (document.activeElement !== body)
-          setTimeout(resetFocus, 10);
-      }, 10 );
+      }
     }
-    body.addEventListener("blur", resetFocus);
 
-    return ( () => body.removeEventListener("blur", resetFocus) );
+    return () => clearInterval(focInt);
   }, [])
 
   let cancelHandler = e => { console.log("dial cancel"); closeDial(); e.preventDefault(); };

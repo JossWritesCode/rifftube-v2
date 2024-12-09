@@ -438,9 +438,6 @@ rifftube.record_stop = function()
 
     //debugger;
     rifftube.curDur.value = rifftube.riff_duration;
-
-    // send msg to react app which may send another msg back to save
-    rifftube.sendMessage("rifftube:riff:edit:riff:finish");
 }
 
 function topLevel()
@@ -707,6 +704,10 @@ rifftube.setupRecorderCallback = function(e)
         let container = new DataTransfer();
         container.items.add(file);
         rifftube.curFile.files = container.files;
+
+        // send msg to react app which may send another msg back to save
+        // this indicates an audio riff is ready
+        rifftube.sendMessage("rifftube:riff:edit:riff:finish");
     }
 
     //debugger;
