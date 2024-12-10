@@ -16,6 +16,7 @@ import {
   cableDelete,
   EMPTY_RIFFS,
   setFocusEl,
+  BODY_SELECTOR,
 } from '../../actions/index.js';
 import MetaBar from '../MetaBar.jsx';
 import NavBar from '../NavBar.jsx';
@@ -31,6 +32,9 @@ const EditInterface = (props) => {
 
   const setupAudioPlayers = () =>
   {
+    // set focus to body element
+    props.setFocusEl(BODY_SELECTOR);
+
     console.log("setup audio players");
     let audioPlayers = [];
     let audioPlayersCount = 5;
