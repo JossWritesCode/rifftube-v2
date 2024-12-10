@@ -1,6 +1,13 @@
 import React, { useState, useEffect, createRef, useCallback } from 'react';
 import { connect } from 'react-redux';
-import { editRiff, deleteRiff, updateRiffTime } from '../../actions/index.js';
+import {
+  editRiff,
+  deleteRiff,
+  updateRiffTime,
+  setFocusEl,
+  BODY_SELECTOR,
+  EDIT_SELECTOR,
+} from '../../actions/index.js';
 import Audio from '../../images/settings_voice-24px.svg';
 import Text from '../../images/chat-24px.svg';
 
@@ -43,6 +50,7 @@ function RiffDetail(props)
     let dial = document.querySelector('#rifftube-edit-dialog');
     dial.close();
     dial.remove();
+    props.setFocusEl(BODY_SELECTOR);
   }
   let cancelHandler = e => { console.log("dial cancel"); closeDial(); e.preventDefault(); };
 
@@ -102,6 +110,9 @@ function RiffDetail(props)
                 .then(response => response.text())
                 .then(text =>
                   {
+                    // for focus
+                    props.setFocusEl(EDIT_SELECTOR);
+
                     let el = document.createElement("dialog");
                     el.id = "rifftube-edit-dialog";
                     el.innerHTML = text;
@@ -154,12 +165,14 @@ const mapStateToProps = (state) => ({
   riffsAudio: state.riffsAudio.all,
   rifftubePlayer: state.rifftubePlayer,
   recorder: state.recorder,
+  focusElement: state.focusElement,
 });
 
 const mapDispatchToProps = {
   editRiff,
   deleteRiff,
   updateRiffTime,
+  setFocusEl,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(RiffDetail);

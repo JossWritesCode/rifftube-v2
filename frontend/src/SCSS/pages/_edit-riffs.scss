@@ -1,13 +1,14 @@
 @use "../abstract/variables";
 
 /* display message to give focus to body.
-  TODO: change to move message */
-body:not(:focus)::before
-{
-  content: "Click to restore focus here";
-  background-color: red;
-}
-
+  TODO: change to move message
+  body:not(:focus)::before
+  {
+    content: "Click to restore focus here";
+    background-color: red;
+  }
+  */
+  
 #introDialog::backdrop
 {
   background-color: rgba(0, 0, 0, 0.75);

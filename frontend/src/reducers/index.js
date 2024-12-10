@@ -5,6 +5,8 @@ import riffsAudioReducer from './riffsAudio-reducer';
 import riffsMetaReducer from './riffsMeta-reducer';
 import riffsMetaObjReducer from './riffsMetaObj-reducer';
 import modeReducer from './mode-reducer';
+import focusElementReducer from './focusElement-reducer';
+
 import riffsPlayingReducer from './riffsPlaying-reducer';
 import nameReducer from './name-reducer';
 import videoIDReducer from './videoID-reducer';
@@ -37,6 +39,8 @@ export default combineReducers({
   riffsMeta: riffsMetaReducer, // used for metabar, under edit interface
   riffsMetaObj: riffsMetaObjReducer, // used for view
   mode: modeReducer,
+  focusElement: focusElementReducer,
+
   riffsPlaying: riffsPlayingReducer,
   name: nameReducer, // remove?
   videoID: videoIDReducer,

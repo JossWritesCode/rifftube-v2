@@ -8,7 +8,11 @@ import Login from '../Login/Login.jsx';
 import { setRifferName, setPlayerMode, setRecorder,
   saveNewRiff, saveEditRiff, setVideoID, getAllRiffs, getMyRiffs, getUserOptions,
   PLAY_MODE,
-  PAUSE_MODE, } from '../../actions/index.js';
+  PAUSE_MODE,
+  setFocusEl,
+  BODY_SELECTOR,
+  EDIT_SELECTOR,
+} from '../../actions/index.js';
 
 import { executeScriptElements, extractVideoID, riffFD2Obj } from './util.js';
 
@@ -34,18 +38,17 @@ const EditControls = (props) =>
       // allow focus to leave the body if not logged in
       if (!props.loggedIn) return;
 
-      // allow focus to leave the body if editing dialog is open
-      if (document.querySelector('.rifftube-riff-edit-dialog')) return;
+      const focusEl = document.querySelector(props.focusElement);
       
-      if (document.activeElement !== body)
+      if (document.activeElement !== focusEl)
       {
-        body.focus();
-        console.log("reset focus", document.activeElement);
+        focusEl.focus();
+        console.log("reset focus", document.activeElement, focusEl);
       }
     }
 
     return () => clearInterval(focInt);
-  }, [props.loggedIn])
+  }, [props.loggedIn, props.focusElement])
 
   let cancelHandler = e => { console.log("dial cancel"); closeDial(); e.preventDefault(); };
 
@@ -85,7 +88,11 @@ const EditControls = (props) =>
 
         let et = td.firstElementChild;
 
+        // set these state variables for the component
+        // they are the edit dialog element,
+        // and the CSS selector for it
         setEditEl(et);
+        props.setFocusEl(EDIT_SELECTOR);
 
         // set up recorder and start time
         let set_recorder_event = new CustomEvent("rifftube:riff:edit:setup:recorder",
@@ -141,6 +148,9 @@ const EditControls = (props) =>
 
   function closeDial()
   {
+    // used to set focus
+    props.setFocusEl(BODY_SELECTOR);
+
     let dial = document.querySelector('#rifftube-edit-dialog');
     dial.close();
     dial.remove();
@@ -308,6 +318,7 @@ let mapStateToProps = (state) => ({
   confirmed: state.confirmed,
   rifftubePlayer: state.rifftubePlayer,
   userOptions: state.userOptions,
+  focusElement: state.focusElement,
 });
 
 const mapDispatchToProps = {
@@ -320,6 +331,7 @@ const mapDispatchToProps = {
   getAllRiffs,
   getMyRiffs,
   getUserOptions,
+  setFocusEl,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditControls);

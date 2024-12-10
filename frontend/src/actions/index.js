@@ -38,6 +38,10 @@ export const PLAY_MODE = 'PLAY_MODE';
 export const PAUSE_MODE = 'PAUSE_MODE';
 export const TOGGLE_PLAYER_MODE = 'TOGGLE_PLAYER_MODE';
 
+export const FOCUS_ELEMENT = "FOCUS_ELEMENT";
+export const BODY_SELECTOR = "body";
+export const EDIT_SELECTOR = ".rifftube-riff-edit-dialog";
+
 export const SET_VIDEO_ID = 'SET_VIDEO_ID';
 export const RECEIVE_NAME_UPDATE = 'RECEIVE_NAME_UPDATE';
 
@@ -144,6 +148,16 @@ export const currentUserStatus = () => {
       console.log("error", err));
   };
 };
+
+
+/******* used to keep focus on the correct element */
+
+export const setFocusEl = payload =>
+({
+  type: FOCUS_ELEMENT,
+  payload
+})
+
 
 
 /********** Saving, editing  */
