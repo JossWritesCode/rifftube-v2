@@ -15,6 +15,7 @@ import {
   cableUpdate,
   cableDelete,
   EMPTY_RIFFS,
+  setFocusEl,
 } from '../../actions/index.js';
 import MetaBar from '../MetaBar.jsx';
 import NavBar from '../NavBar.jsx';
@@ -131,6 +132,10 @@ const EditInterface = (props) => {
       handleWSConnection(vid);
     }
     introDialogRef.current?.showModal();
+    // sets the focus element to the ok button
+    // when the intro dialog is shown
+    props.setFocusEl("#introDialog button");
+    
   }, []);
   
 
@@ -290,6 +295,7 @@ const mapDispatchToProps = {
   setAudioPlayerNotInUse,
   cableUpdate,
   cableDelete,
+  setFocusEl,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditInterface);
