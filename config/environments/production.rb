@@ -3,9 +3,11 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # TODO: instead of hard-coding these URLs, use env or something
+
   # email stuff
   config.action_mailer.delivery_method = :smtp
-  host = 'rifftube.net' #replace with your own url
+  host = 'rifftube2-d52967d16615.herokuapp.com' #replace with your own url
   config.action_mailer.default_url_options = { host: host }
   
   # SMTP settings for gmail

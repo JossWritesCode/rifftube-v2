@@ -6,6 +6,7 @@ class UserMailer < ApplicationMailer
       uc.save
       @uuid = uc.id
   
-      mail(to: "paxfeline@gmail.com", subject: "Welcome to RiffTube!") # will change to: @user.email
+      #mail(to: "paxfeline@gmail.com", subject: "Welcome to RiffTube!") # will change to: @user.email
+      mail(to: @user.email, subject: "Welcome to RiffTube!")
     end    
 end

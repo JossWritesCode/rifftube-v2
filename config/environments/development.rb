@@ -6,7 +6,7 @@ Rails.application.configure do
 
   # email stuff
   config.action_mailer.delivery_method = :smtp
-  host = 'rifftube.net' #replace with your own url
+  host = 'rifftube2-d52967d16615.herokuapp.com' #replace with your own url
   config.action_mailer.default_url_options = { host: host }
   
   # SMTP settings for gmail
