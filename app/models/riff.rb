@@ -21,6 +21,10 @@ class Riff < ApplicationRecord
         #self[:riff_kind] = self[:isText] ? (self[:speak] ? 2 : 3) : 1
         #self.riff_kind = self.isText ? (self.speak ? 2 : 3) : 1
     #end
+
+    def riff_kind
+        return self.isText ? (self.speak ? 2 : 3) : 1
+    end
     
     def riff_kind=(value)
         #puts "in"

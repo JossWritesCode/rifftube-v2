@@ -119,7 +119,7 @@ class RiffsController < ApplicationController
         @riff = Riff.find(@id)
         params[:riff_kind] = @riff.riff_kind
         puts "set at"
-        puts params[:riff_kind]
+        puts @riff.riff_kind
         render layout: false
     end
 
