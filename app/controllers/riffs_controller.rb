@@ -117,9 +117,9 @@ class RiffsController < ApplicationController
     def edit
         @id = params[:id]
         @riff = Riff.find(@id)
-        params[:riff_kind] = @riff.riff_kind
-        puts "set at"
-        puts @riff.riff_kind
+        #params[:riff_kind] = @riff.riff_kind
+        #puts "set at"
+        #puts @riff.riff_kind
         render layout: false
     end
 
