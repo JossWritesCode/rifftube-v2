@@ -148,8 +148,9 @@ const EditInterface = (props) => {
   
     if (!params.videoID)
     {
+      console.log("no video id, using redirect", props.videoID)
       // props.videoID has a default it can fall back on if needed
-      navigate(`/riff/${props.videoID}`);
+      navigate(`/riff/${props.videoID}`, {replace: true});
     }
     else if (params.videoID !== props.videoID) {
       props.setVideoID( params.videoID );
@@ -165,7 +166,7 @@ const EditInterface = (props) => {
   // I think needed?
   useEffect(() =>
   {
-    if ( props.riffs == EMPTY_RIFFS)
+    if (props.riffs == EMPTY_RIFFS)
     {
       console.log("getRiff invoked because riffs is null");
       props.getRiffs(props.videoID);
@@ -273,7 +274,7 @@ const EditInterface = (props) => {
             </a>
           </div>
         </div>
-      <EditControls history={props.history} />
+      <EditControls />
       </div>
     </React.Fragment>
   )
