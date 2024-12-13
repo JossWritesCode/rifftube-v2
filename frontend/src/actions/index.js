@@ -196,6 +196,9 @@ export const saveNewRiff = (body, riff) =>
   // add tempId to both body and riff
   body.set("tempId", tempId);
   riff.tempId = tempId;
+  //debugger;
+  // 1 = voice, 2 = synth, 3 = no audio
+  riff.isText = riff.riff_kind !== "1";
   return (dispatch) =>
   {
     dispatch({ type: SAVE_NEW_RIFF, payload: riff });

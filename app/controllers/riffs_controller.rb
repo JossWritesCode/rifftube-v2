@@ -79,10 +79,18 @@ class RiffsController < ApplicationController
             end
             params[:riff][:video_id] = video.id
             
-            print riff_params.inspect
+            puts "FOOBAR"
+            puts riff_params
+            #puts params[:riff][:riff_kind]
 
             @riff = Riff.new(riff_params)
-            @riff.riff_kind = riff_params[:riff_kind]
+
+            #@riff.riff_kind = params[:riff][:riff_kind]
+
+            #puts @riff.inspect
+            puts "FOOBARt"
+            puts params[:riff][:riff_kind]
+            puts @riff.inspect
 
             if @riff.save
                 # used to avoid duplicating commands
@@ -109,9 +117,9 @@ class RiffsController < ApplicationController
     def edit
         @id = params[:id]
         @riff = Riff.find(@id)
-        params[:riff_kind] = @riff.riff_kind
-        puts "set at"
-        puts params[:riff_kind]
+        #params[:riff_kind] = @riff.riff_kind
+        #puts "set at"
+        #puts @riff.riff_kind
         render layout: false
     end
 
@@ -189,7 +197,7 @@ end
 private
 def riff_params
   #params[:user][:email].downcase!
-  params.require(:riff).permit(:id, :audio, :text, :start, :duration, :user_id, :video_id, :riff_kind,  :showText, :autoDuration, :voice)
+  params.require(:riff).permit(:id, :audio, :text, :start, :duration, :user_id, :video_id, :riff_kind, :showText, :autoDuration, :voice)
 end
 
 def recode_audio
