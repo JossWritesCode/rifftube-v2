@@ -143,3 +143,50 @@ animation-name: fadeout;
     opacity: 0%;
     }
 }
+
+
+/* may have dup code */
+
+
+
+.rifftube-riffers > div > div.rifftube-text-riff {
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+    animation-name: fadein;
+    }
+    
+    .rifftube-riffers > div.hiding > div.rifftube-text-riff {
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-out;
+    animation-name: fadeout;
+    }
+  
+  .rifftube-text-riff {
+    position: absolute;
+    bottom: 100%;
+    left: 0%;
+    font-size: 200%;
+    text-shadow: white 0 0 0.25rem;
+    animation: initial;
+    max-width: 300%;
+    min-width: 6rem; /* made up, to ensure little triangle has room */
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0.5rem;
+    border-radius: 1rem;
+    width: max-content;
+    }
+    
+    .rifftube-text-riff::before {
+    content: '';
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    background-color: rgba(255, 255, 255, 0.5);
+    left: 3rem;
+    bottom: -1rem;
+    transform: scaleY(0.666) rotate(45deg);
+    z-index: -1;
+    clip-path: polygon(100% 100%, 100% 0%, 0% 100%);
+    }
