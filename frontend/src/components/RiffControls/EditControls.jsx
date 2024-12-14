@@ -36,7 +36,7 @@ const EditControls = (props) =>
     function resetFocus()
     {
       // allow focus to leave the body if not logged in
-      if (!props.loggedIn) return;
+      if (props.focusElement === '' || !props.loggedIn) return;
 
       const focusEl = document.querySelector(props.focusElement);
       
@@ -92,7 +92,11 @@ const EditControls = (props) =>
         // they are the edit dialog element,
         // and the CSS selector for it
         setEditEl(et);
-        props.setFocusEl(EDIT_SELECTOR);
+
+        if (e.key == 'r')
+          props.setFocusEl(EDIT_SELECTOR);
+        else
+          props.setFocusEl(''); // the empty string signifies take no action
 
         // set up recorder and start time
         let set_recorder_event = new CustomEvent("rifftube:riff:edit:setup:recorder",
