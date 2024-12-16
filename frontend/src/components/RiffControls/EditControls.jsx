@@ -93,6 +93,8 @@ const EditControls = (props) =>
         // and the CSS selector for it
         setEditEl(et);
 
+        //console.log("edit controls set edit el", et);
+
         if (e.key == 'r')
           props.setFocusEl(EDIT_SELECTOR);
         else
@@ -190,7 +192,7 @@ const EditControls = (props) =>
   }
 
   //console.log("ue", props.userOptions);
-  const riffFinish = () => //useCallback( () =>
+  const riffFinish = useCallback( () =>
   {
     //console.log("ue", props.userOptions);
 
@@ -205,7 +207,7 @@ const EditControls = (props) =>
       let edit_save_event = new CustomEvent("rifftube:riff:edit:save");
       editEl.dispatchEvent(edit_save_event);
     }
-  }; //, [editEl, props.userOptions, props.mode] );
+  }, [editEl, props.userOptions, props.mode] );
   
   useEffect(() =>
   {
@@ -239,7 +241,7 @@ const EditControls = (props) =>
     {
       document.removeEventListener('rifftube:riff:edit:riff:finish', riffFinish, false);
     }
-  }, [props.userOptions, props.mode]);
+  }, [props.userOptions, props.mode, editEl]);
 
   
   

@@ -197,8 +197,14 @@ export const saveNewRiff = (body, riff) =>
   body.set("tempId", tempId);
   riff.tempId = tempId;
   //debugger;
+
+  // special setup needed for new riffs:
   // 1 = voice, 2 = synth, 3 = no audio
   riff.isText = riff.riff_kind !== "1";
+
+  // TODO: add user id?
+  console.log("save new riff action", riff);
+
   return (dispatch) =>
   {
     dispatch({ type: SAVE_NEW_RIFF, payload: riff });
