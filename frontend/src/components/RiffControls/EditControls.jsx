@@ -166,15 +166,20 @@ const EditControls = (props) =>
       props.setPlayerMode(PLAY_MODE);
   }
 
-  function saveRiff({ detail })
+  const saveRiff = useCallback(({ detail }) =>
   {
     // detail is FormData
-    console.log( "sr", detail );
-
+    //console.log( "sr", detail );
+    
     let riff = riffFD2Obj(detail);
+
+    console.log("save riff user info", riff, props.userInfo);
 
     // mark as unsaved
     riff.unsaved = true;
+
+    // add user id:
+    riff.user_id = props.userInfo.id;
 
       //...action.payload,
     //delete riff.payload;
@@ -189,7 +194,7 @@ const EditControls = (props) =>
     }
 
     closeDial();
-  }
+  }, [props.userInfo, props.saveEditRiff, props.saveNewRiff]);
 
   //console.log("ue", props.userOptions);
   const riffFinish = useCallback( () =>
@@ -219,7 +224,7 @@ const EditControls = (props) =>
       document.removeEventListener('rifftube:riff:edit:save', saveRiff, false);
       document.removeEventListener('rifftube:riff:edit:close', closeDial, false);
     }
-  }, []);
+  }, [props.userInfo]);
 
   useEffect(() =>
   {
