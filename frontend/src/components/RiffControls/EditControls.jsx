@@ -152,7 +152,7 @@ const EditControls = (props) =>
       props.userOptions,
     ] );
 
-  function closeDial()
+  const closeDial = useCallback(() =>
   {
     // used to set focus
     props.setFocusEl(BODY_SELECTOR);
@@ -161,10 +161,15 @@ const EditControls = (props) =>
     dial.close();
     dial.remove();
 
+    console.log("close dial user options", props.userOptions);
+
     // depending on options, maybe play now
     if (props.userOptions?.play_after_riff)
       props.setPlayerMode(PLAY_MODE);
-  }
+  },
+  [
+    props.userOptions,
+  ]);
 
   const saveRiff = useCallback(({ detail }) =>
   {
@@ -194,7 +199,7 @@ const EditControls = (props) =>
     }
 
     closeDial();
-  }, [props.userInfo, props.saveEditRiff, props.saveNewRiff]);
+  }, [props.userInfo, props.userOptions, props.saveEditRiff, props.saveNewRiff]);
 
   //console.log("ue", props.userOptions);
   const riffFinish = useCallback( () =>
@@ -209,7 +214,7 @@ const EditControls = (props) =>
     // also based on options, maybe save immediately
     if (props.userOptions.immediate_save)
     {
-      let edit_save_event = new CustomEvent("rifftube:riff:edit:save");
+      let edit_save_event = new CustomEvent("rifftube:riff:edit:trigger-save");
       editEl.dispatchEvent(edit_save_event);
     }
   }, [editEl, props.userOptions, props.mode] );
@@ -224,7 +229,7 @@ const EditControls = (props) =>
       document.removeEventListener('rifftube:riff:edit:save', saveRiff, false);
       document.removeEventListener('rifftube:riff:edit:close', closeDial, false);
     }
-  }, [props.userInfo]);
+  }, [props.userInfo, props.userOptions]);
 
   useEffect(() =>
   {
@@ -270,11 +275,12 @@ const EditControls = (props) =>
 
   //console.log("ue", props.userOptions);
   useEffect(() =>
-    {
-      //console.log("ue", props.userOptions);
-      if (props.loggedIn && props.userOptions == null)
-        props.getUserOptions();
-    }, [props.loggedIn, props.userOptions])
+  {
+    console.log("edit controls ue check user options", props.userOptions);
+    if (props.loggedIn && props.userOptions == null)
+      props.getUserOptions();
+  },
+  [props.loggedIn, props.userOptions]);
 
   return (
         <div className="control-panel">
