@@ -36,7 +36,14 @@ const EditControls = (props) =>
     function resetFocus()
     {
       // allow focus to leave the body if not logged in
-      if (props.focusElement === '' || !props.loggedIn) return;
+      if (!props.loggedIn) return;
+      // don't set focus if the prop is empty
+      if (props.focusElement === '') return;
+      // don't set focus if recording:
+      // this is only needed to avoid a Chrome bug
+      // where the :active CSS pseudoelement stops working
+      // when focus is set
+      if (window?.rifftube?.recording) return;
 
       const focusEl = document.querySelector(props.focusElement);
       

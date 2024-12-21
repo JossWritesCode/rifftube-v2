@@ -34,10 +34,10 @@
         </audio>
     </div>
     <button
+        type="button"
         class="rifftube-record-btn"
         onMouseDown="rifftube.record_start()"
-        onMouseUp="rifftube.record_stop()"
-        onClick="event.preventDefault();">
+        onMouseUp="rifftube.record_stop()">
         record
     </button>
     (press and hold)
@@ -351,7 +351,7 @@ rifftube.timing_start = function()
 {
     if (rifftube.recording) return;
     
-    setFocus(rifftube.curDial);
+    //setFocus(rifftube.curDial);
 
     //debugger;
 
@@ -380,6 +380,8 @@ rifftube.timing_stop = function()
     rifftube.curDur.value = rifftube.riff_duration;
 }
 
+// removing:
+/*
 function setFocus(el)
 {
 	let sfi = setInterval(
@@ -393,6 +395,7 @@ function setFocus(el)
         500 //ms
 	)
 }
+*/
 
 rifftube.record_start = function()
 {
@@ -404,11 +407,7 @@ rifftube.record_start = function()
 
     //debugger;
 
-    //let rootDiv = document.querySelector(".rifftube-riff-edit-dialog");
-    setFocus(rifftube.curDial);
-
-    //setFocus(document.body.firstElementChild);
-    //document.body.firstElementChild.focus();
+    //setFocus(rifftube.curDial);
 
     console.log("start rec", rifftube)
 
