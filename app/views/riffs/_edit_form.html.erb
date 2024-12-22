@@ -519,6 +519,14 @@ rifftube.rec_keydown = function(e)
         rifftube.curAutoChk.checked = false;
         rifftube.timing_start();
     }
+    else
+        return;
+
+    // needed because otherwise
+    // when moving from one type to another
+    // focus will otherwise be lost to
+    // the body element
+    rifftube.curDial.focus();
 
     e.stopPropagation();
 }

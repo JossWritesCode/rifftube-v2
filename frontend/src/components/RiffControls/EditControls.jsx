@@ -45,6 +45,18 @@ const EditControls = (props) =>
       // when focus is set
       if (window?.rifftube?.recording) return;
 
+      // new: don't change focus if the
+      // active element is a textarea
+      // or any input element (maybe restrict?)
+      if (
+        ["TEXTAREA", "INPUT"]
+        .includes(document.activeElement?.tagName)
+      ) return;
+
+      // TODO: remove the behavior for focusElement == ''
+      // because it can be handled by the above
+
+
       const focusEl = document.querySelector(props.focusElement);
       
       if (document.activeElement !== focusEl)
@@ -102,10 +114,16 @@ const EditControls = (props) =>
 
         //console.log("edit controls set edit el", et);
 
+        // set focus to edit dialog
+        props.setFocusEl(EDIT_SELECTOR);
+
+        // new: should not be needed:
+        /*
         if (e.key == 'r')
           props.setFocusEl(EDIT_SELECTOR);
         else
           props.setFocusEl(''); // the empty string signifies take no action
+        */
 
         // set up recorder and start time
         let set_recorder_event = new CustomEvent("rifftube:riff:edit:setup:recorder",
@@ -258,7 +276,7 @@ const EditControls = (props) =>
     {
       document.removeEventListener('rifftube:riff:edit:riff:finish', riffFinish, false);
     }
-  }, [props.userOptions, props.mode, editEl]);
+  }, [editEl, props.userOptions, props.mode]);
 
   
   
