@@ -34,6 +34,11 @@ const riffsAudioReducer = (state = initialState, action) => {
     case SAVE_EDIT_RIFF: {
       console.log("ser ra reducer", action.payload);
       // edit riff:
+      // if the audio file is empty, no change to audio
+      // make no change
+      if (action.payload.audio.size == 0)
+        return state;
+      // otherwise, update:
       return {
         ...state,
         all: {

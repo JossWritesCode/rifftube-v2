@@ -107,6 +107,8 @@ const EditInterface = (props) => {
         debugger;
         if (data.cmd == "update")
         {
+          // TODO: seek and destroy the self...
+          // as in "self.props" below
           self.props.cableUpdate(data);
         }
         else if (data.cmd == "delete")
