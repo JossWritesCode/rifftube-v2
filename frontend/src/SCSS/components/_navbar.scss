@@ -1,12 +1,32 @@
 @use "../abstract/variables";
 
-.nav-user-menu
+#nav-user-menu-cont
+{
+  --hvar: 0%;
+}
+
+#nav-user-menu-cont:has(#nav-user-menu-checkbox:checked)
+{
+  --hvar: 100%;
+}
+
+#nav-user-menu-items
+{
+  position: absolute;
+  max-height: var(--hvar);
+  overflow: hidden;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+
+  transition: 1s all;
+}
+
+#nav-user-menu
 {
   width: 4rem;
   height: 4rem;
   border: 0.75rem solid black;
   border-radius: 50%;
-  float: right;
   box-sizing: content-box;
   text-align: center;
   

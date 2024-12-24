@@ -3,16 +3,25 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { logout } from '../actions';
 
-//const NavBar = ({ color, loggedIn, logout }) => (
 const UserMenu = (props) => (
-    <div
-        className="nav-user-menu"
-        style={
-            props.loggedIn && props.userInfo
-            ?
-                {backgroundImage: `url(/riffer-pic/${props.userInfo.id}.png`}
-            :
-                null} />
+    <div style={{display: "inline-block", float: "right"}} id="nav-user-menu-cont">
+        <label>
+            <input type="checkbox" style={{position: "absolute", visibility: "visible"}}
+                id="nav-user-menu-checkbox" />
+            <div
+                id="nav-user-menu"
+                style={
+                    props.loggedIn && props.userInfo
+                    ?
+                        {backgroundImage: `url(/riffer-pic/${props.userInfo.id}.png`}
+                    :
+                        null
+            } />
+        </label>
+        <div id="nav-user-menu-items">
+            David Newberry
+        </div>
+    </div>
 );
 
 let mapStateToProps = (state) => ({
