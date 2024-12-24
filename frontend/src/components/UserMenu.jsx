@@ -18,10 +18,38 @@ const UserMenu = (props) => (
                         null
             } />
         </label>
-        <div style={{position: "relative"}}>
-            <div id="nav-user-menu-items">
-                David Newberry
-            </div>
+        <div id="nav-user-menu-items">
+            {props && props.loggedIn ? 
+                  (
+                    <div>
+                        <div>
+                        <NavLink
+                            activeclassname="navbar-link-active"
+                            style={{ color: props ? props.color : "initial" }}
+                            to="/account"
+                        >
+                            {props.userInfo.name || "Account"}
+                        </NavLink>
+                        </div>
+                        <div>
+                        <NavLink
+                            style={{ color: props ? props.color : "initial" }}
+                            onClick={ e => { props.logout(); e.preventDefault(); }}
+                            to="/logout" // this is ignored, but looks good
+                        >
+                            Sign Out
+                        </NavLink>
+                        </div>
+                    </div>
+                  ) : (
+                    <NavLink
+                    activeclassname="navbar-link-active"
+                      style={{ color: props ? props.color : "initial" }}
+                      to="/signup"
+                    >
+                      Signup
+                    </NavLink>
+                  )}
         </div>
     </div>
 );
@@ -32,6 +60,7 @@ let mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = {
+    logout,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserMenu);

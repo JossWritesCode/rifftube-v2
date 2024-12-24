@@ -7,21 +7,25 @@
 
 #nav-user-menu-cont:has(#nav-user-menu-checkbox:checked)
 {
-  --hvar: 150%;
+  --hvar: calc(141% + 5rem); // 141% = 100% * sqrt(2)
+  /* https://stackoverflow.com/questions/59779083/clip-pathcircle-radius-doesnt-seem-to-be-calculated-correctly
+  this says that the specs are sqrt(w^2+h^2)/sqrt(2), but I can't find that in the specs linked
+  https://drafts.csswg.org/css-shapes/#basic-shape-functions */
 }
 
 #nav-user-menu-items
 {
   width: max-content;
   position: absolute;
-  clip-path: circle(var(--hvar) at calc(100% - 3rem) 0);
+  z-index: 1;
+  clip-path: circle(var(--hvar) at calc(100% - 3rem) -3rem);
   overflow: hidden;
   right: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   box-shadow: inset 0 0 1rem gray;
   padding: 1rem;
 
-  transition: 0.2s all;
+  transition: all 0.1s linear;
 }
 
 #nav-user-menu
