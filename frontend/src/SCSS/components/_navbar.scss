@@ -7,18 +7,21 @@
 
 #nav-user-menu-cont:has(#nav-user-menu-checkbox:checked)
 {
-  --hvar: 100%;
+  --hvar: 150%;
 }
 
 #nav-user-menu-items
 {
+  width: max-content;
   position: absolute;
-  max-height: var(--hvar);
+  clip-path: circle(var(--hvar) at calc(100% - 3rem) 0);
   overflow: hidden;
   right: 0;
   background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 0 1rem gray;
+  padding: 1rem;
 
-  transition: 1s all;
+  transition: 0.2s all;
 }
 
 #nav-user-menu

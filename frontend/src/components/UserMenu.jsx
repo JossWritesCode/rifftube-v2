@@ -6,7 +6,7 @@ import { logout } from '../actions';
 const UserMenu = (props) => (
     <div style={{display: "inline-block", float: "right"}} id="nav-user-menu-cont">
         <label>
-            <input type="checkbox" style={{position: "absolute", visibility: "visible"}}
+            <input type="checkbox" style={{position: "absolute", visibility: "hidden"}}
                 id="nav-user-menu-checkbox" />
             <div
                 id="nav-user-menu"
@@ -18,8 +18,10 @@ const UserMenu = (props) => (
                         null
             } />
         </label>
-        <div id="nav-user-menu-items">
-            David Newberry
+        <div style={{position: "relative"}}>
+            <div id="nav-user-menu-items">
+                David Newberry
+            </div>
         </div>
     </div>
 );
