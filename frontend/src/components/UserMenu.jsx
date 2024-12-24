@@ -2,11 +2,32 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { logout } from '../actions';
-import UserMenu from './UserMenu';
 
 //const NavBar = ({ color, loggedIn, logout }) => (
-const NavBar = (props) => (
-  <nav className="navbar">
+const UserMenu = (props) => (
+    <div
+        className="nav-user-menu"
+        style={
+            props.loggedIn && props.userInfo
+            ?
+                {backgroundImage: `url(/riffer-pic/${props.userInfo.id}.png`}
+            :
+                null} />
+);
+
+let mapStateToProps = (state) => ({
+  loggedIn: state.loggedIn,
+  userInfo: state.userInfo,
+});
+
+const mapDispatchToProps = {
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserMenu);
+
+`
+/*
+<nav className="navbar">
     <NavLink
       activeclassname="navbar-home-link-active"
       className="heading-primary-nav"
@@ -48,15 +69,7 @@ const NavBar = (props) => (
           Signup
         </NavLink>
       )}
-      <UserMenu />
   </nav>
-);
-let mapStateToProps = (state) => ({
-  loggedIn: state.loggedIn,
-});
+  */
 
-const mapDispatchToProps = {
-  logout,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+  `

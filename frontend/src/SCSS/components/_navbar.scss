@@ -1,8 +1,23 @@
 @use "../abstract/variables";
 
+.nav-user-menu
+{
+  width: 4rem;
+  height: 4rem;
+  border: 0.75rem solid black;
+  border-radius: 50%;
+  float: right;
+  box-sizing: content-box;
+  text-align: center;
+  
+  background-color: gray;
+  background-image: url(/riffer-pic/0.png);
+  background-size: cover;
+}
+
 .navbar {
   font-size: 3vh;
-  display: flex;
+  //display: flex;
   align-items: center;
   justify-content: flex-start;
   top: 0;
