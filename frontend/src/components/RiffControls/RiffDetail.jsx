@@ -11,7 +11,7 @@ import {
 import Audio from '../../images/settings_voice-24px.svg';
 import Text from '../../images/chat-24px.svg';
 
-import { executeScriptElements, debounce } from './util.js';
+import { executeScriptElements, debounce } from '../../util.js';
 
 /*
 import Delete from '../../images/delete-24px.svg';

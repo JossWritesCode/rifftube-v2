@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { getUserOptions, setUserOptions } from '../actions'
 
-import { executeScriptElements } from './RiffControls/util.js';
+import { executeScriptElements } from '../util.js';
 
 const UserOptions = (props) =>
 {

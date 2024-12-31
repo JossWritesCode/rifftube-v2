@@ -14,7 +14,7 @@ import { setRifferName, setPlayerMode, setRecorder,
   EDIT_SELECTOR,
 } from '../../actions/index.js';
 
-import { executeScriptElements, extractVideoID, riffFD2Obj } from './util.js';
+import { executeScriptElements, extractVideoID, riffFD2Obj } from '../../util.js';
 
 /*This component houses all of the riff buttons and the rifflist*/
 const EditControls = (props) =>
@@ -319,34 +319,10 @@ const EditControls = (props) =>
 
   return (
         <div className="control-panel">
-          <button className="btn" id="change-video-btn" onClick={(e) => {
-              const vPrompt = prompt("Paste YouTube URL or video ID:");
-              if ( vPrompt )
-              {
-                const vID = extractVideoID(vPrompt);
-                navigate(`/riff/${vID}`);
-                props.setVideoID(vID);
-                props.getAllRiffs(vID);
-                props.getMyRiffs(vID);
-              }
-            }}>
-            Change Video
-          </button>
           {
             props.loggedIn ?
             (
               <React.Fragment>
-                {
-                  props.userInfo?.name ?
-                  (
-                    <div className="riffer-name">
-                      Riffer Name:&nbsp;
-                      {props.userInfo.name}
-                    </div>
-                  ) : null
-
-                  /* to add back later <Collaboration /> */
-                }
                 <div id="recBtn"
                   onPointerDown={e=>
                   {
