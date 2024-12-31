@@ -797,6 +797,9 @@ rifftube.curDial.addEventListener("rifftube:riff:edit:start", rifftube.startReco
 // message from front-end to save immediately
 rifftube.curDial.addEventListener("rifftube:riff:edit:trigger-save", rifftube.save_riff, false);
 
+// message from front-end to save immediately
+rifftube.curDial.addEventListener("rifftube:riff:edit:trigger-stop-rec", rifftube.record_stop, false);
+
 window.addEventListener("message", rifftube.messageCallback, false);
 
 rifftube.curPlayer.addEventListener("loadmetadata", rifftube.setInitialDuration);
