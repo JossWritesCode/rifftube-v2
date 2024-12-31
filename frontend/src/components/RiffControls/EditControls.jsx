@@ -178,6 +178,14 @@ const EditControls = (props) =>
       props.confirmed, 
       props.userOptions,
     ] );
+  
+  const stopRec = useCallback(()=>
+  {
+
+    let trigger_stop_event = new CustomEvent("rifftube:riff:edit:trigger-stop-rec");
+    editEl.dispatchEvent(trigger_stop_event);
+  },
+  [editEl]);
 
   const closeDial = useCallback(() =>
   {
@@ -339,6 +347,19 @@ const EditControls = (props) =>
 
                   /* to add back later <Collaboration /> */
                 }
+                <div id="recBtn"
+                  onPointerDown={e=>
+                  {
+                    // spoof the getModifierState function to avoid error down the line
+                    keydown( { key: "r", getModifierState: () => false } );
+                    // necessary to get the pointerup event
+                    // feels a bit sketchy, but works
+                    e.target.setPointerCapture(e.pointerId);
+                  }}
+                  onPointerUp={()=>
+                  {
+                    stopRec();
+                  }}></div>
                 <RiffList />
                 <template ref={templateRef}></template>
               </React.Fragment>
