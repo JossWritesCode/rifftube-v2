@@ -337,6 +337,12 @@ const EditControls = (props) =>
 
                   /* to add back later <Collaboration /> */
                 }
+                <div id="recBtn"
+                  onMouseDown={e=>
+                  {
+                    ;
+                  }
+                  }></div>
                 <RiffList />
                 <template ref={templateRef}></template>
               </React.Fragment>
