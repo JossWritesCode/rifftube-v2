@@ -9,12 +9,15 @@ import {
   WS_UPDATE_RIFF,
   WS_DELETE_RIFF,
   EMPTY_RIFFS,
+  LOGOUT,
 } from '../actions/index.js';
 
 let initialState = EMPTY_RIFFS;
 
 const riffsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case LOGOUT:
+      return EMPTY_RIFFS;
     case DELETE_RIFF:
     {
       let ret = { ...state };

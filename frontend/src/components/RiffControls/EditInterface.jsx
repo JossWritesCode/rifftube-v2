@@ -166,6 +166,7 @@ const EditInterface = (props) => {
   
 
   // I think needed?
+  // new: added dependencies
   useEffect(() =>
   {
     if (props.riffs == EMPTY_RIFFS)
@@ -173,7 +174,7 @@ const EditInterface = (props) => {
       console.log("getRiff invoked because riffs is null");
       props.getRiffs(props.videoID);
     }
-  });
+  }, [props.riffs, props.loggedIn]);
 
 
   /*
