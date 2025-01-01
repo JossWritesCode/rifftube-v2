@@ -206,7 +206,7 @@ const EditInterface = (props) => {
 
   return (
     <React.Fragment>
-      <NavBar color="grey" />
+      <NavBar color="grey" loc="riff" />
 
       <dialog
         id="introDialog"

@@ -5,6 +5,7 @@ import { logout, setVideoID, getAllRiffs, getMyRiffs } from '../actions';
 import { extractVideoID } from '../util.js';
 import UserMenu from './UserMenu';
 import { useNavigate } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 //const NavBar = ({ color, loggedIn, logout }) => (
 const NavBar = (props) =>
@@ -31,23 +32,26 @@ const NavBar = (props) =>
       {props && props.loggedIn ? 
         (
           <React.Fragment>
-            <NavLink
-              style={{ color: props ? props.color : "initial" }}
-              to="/change-video" // this is ignored, but looks good
-              onClick={(e) => {
-                e.preventDefault();
-                const vPrompt = prompt("Paste YouTube URL or video ID:");
-                if ( vPrompt )
-                {
-                  const vID = extractVideoID(vPrompt);
-                  navigate(`/riff/${vID}`);
-                  props.setVideoID(vID);
-                  props.getAllRiffs(vID);
-                  props.getMyRiffs(vID);
-                }
-              }}>
-              Change Video
-            </NavLink>
+            {props?.loc === "riff"
+            ?
+              <NavLink
+                style={{ color: props ? props.color : "initial" }}
+                to="/change-video" // this is ignored, but looks good
+                onClick={(e) => {
+                  e.preventDefault();
+                  const vPrompt = prompt("Paste YouTube URL or video ID:");
+                  if ( vPrompt )
+                  {
+                    const vID = extractVideoID(vPrompt);
+                    navigate(`/riff/${vID}`);
+                    props.setVideoID(vID);
+                    props.getAllRiffs(vID);
+                    props.getMyRiffs(vID);
+                  }
+                }}>
+                Change Video
+              </NavLink>
+            : null}
             <UserMenu />
           </React.Fragment>
         ) : (
