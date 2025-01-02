@@ -174,7 +174,10 @@ const EditInterface = (props) => {
       console.log("getRiff invoked because riffs is null");
       props.getRiffs(props.videoID);
     }
-  }, [props.riffs, props.loggedIn]);
+    else
+      console.log("no getRiff", props);
+  },
+  [props.riffs, props.loggedIn]);
 
 
   /*

@@ -25,6 +25,7 @@ const riffsReducer = (state = initialState, action) => {
       return ret;
     }
     case RECEIVE_RIFF_LIST:
+      console.log("riffs RECEIVE_RIFF_LIST", action);
       let base = {};
       Object.defineProperty(base, "timestamp", {value: Date.now()}); // fix initial view riff load
       return action.payload.reduce(
@@ -69,6 +70,7 @@ const riffsReducer = (state = initialState, action) => {
 
     case SAVE_EDIT_RIFF:
     {
+      console.log("riffs reducer", action);
       // dup obj so that riffsAudio reducer can get the unaltered payload
       const riff = { ...action.payload };
       delete riff.audio;
