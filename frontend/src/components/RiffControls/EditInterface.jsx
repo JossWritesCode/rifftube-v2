@@ -130,22 +130,16 @@ const EditInterface = (props) => {
   }
 
   useEffect(() => {
-    if (params.videoID) {
-      props.setVideoID( params.videoID );
-      props.getAllRiffs( params.videoID );
-      props.getMyRiffs( params.videoID );
-      const vid = params.videoID;
-      handleWSConnection(vid);
-    }
     introDialogRef.current?.showModal();
     // sets the focus element to the ok button
     // when the intro dialog is shown
     props.setFocusEl("#introDialog button");
-    
-  }, []);
+  },
+  []);
   
 
   // watch for video id change
+  // new: load riffs only if logged in
   useEffect(() => {
   
     if (!params.videoID)
@@ -154,16 +148,27 @@ const EditInterface = (props) => {
       // props.videoID has a default it can fall back on if needed
       navigate(`/riff/${props.videoID}`, {replace: true});
     }
-    else if (params.videoID !== props.videoID) {
+    else if (props.loggedIn && params.videoID !== props.videoID) {
       props.setVideoID( params.videoID );
       props.getRiffs(props.videoID);
 
       const vid = params.videoID;
       handleWSConnection(vid);
     }
-  }, [params.videoID]);
+  },
+  [params.videoID, props.loggedIn]);
 
-  
+  /*
+  // cut from the initial useEffect,
+  // duplicated by above:
+  if (params.videoID) {
+    props.setVideoID( params.videoID );
+    props.getAllRiffs( params.videoID );
+    props.getMyRiffs( params.videoID );
+    const vid = params.videoID;
+    handleWSConnection(vid);
+  }
+    */
 
   // I think needed?
   // new: added dependencies

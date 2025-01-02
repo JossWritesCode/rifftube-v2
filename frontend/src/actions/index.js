@@ -362,7 +362,8 @@ export const getMyRiffs = (videoID) => {
       dispatch({ type: RECEIVE_RIFF_LIST, payload: res.data });
     }).catch(error => {
       console.error(error);
-      dispatch({ type: RECEIVE_RIFF_LIST, payload: [] });
+      // note: this should not be necessary, and was causing problems
+      // removed: dispatch({ type: RECEIVE_RIFF_LIST, payload: [] });
     });
     
   };
