@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 
@@ -21,11 +21,11 @@ const EditControls = (props) =>
 {
   // TODO: maybe: cut out the template?
   // just use ref for the dialog?
-  let templateRef = React.useRef(null);
+  let templateRef = useRef(null);
   const navigate = useNavigate();
 
   // needed to send the immediate save message
-  const [editEl, setEditEl] = useState(null);
+  const editEl = useRef(null);
 
   // enforce focus on body once a second
   useEffect( () =>
@@ -112,7 +112,7 @@ const EditControls = (props) =>
         // set these state variables for the component
         // they are the edit dialog element,
         // and the CSS selector for it
-        setEditEl(et);
+        editEl.current = et;
 
         //console.log("edit controls set edit el", et);
 
@@ -179,13 +179,12 @@ const EditControls = (props) =>
       props.userOptions,
     ] );
   
-  const stopRec = useCallback(()=>
+  const stopRec = () =>
   {
 
     let trigger_stop_event = new CustomEvent("rifftube:riff:edit:trigger-stop-rec");
-    editEl.dispatchEvent(trigger_stop_event);
-  },
-  [editEl]);
+    editEl.current?.dispatchEvent(trigger_stop_event);
+  };
 
   const closeDial = useCallback(() =>
   {
@@ -221,7 +220,7 @@ const EditControls = (props) =>
     // add user id:
     riff.user_id = props.userInfo.id;
 
-      //...action.payload,
+    //...action.payload,
     //delete riff.payload;
     
     if ( riff.id )
@@ -250,9 +249,9 @@ const EditControls = (props) =>
     if (props.userOptions.immediate_save)
     {
       let edit_save_event = new CustomEvent("rifftube:riff:edit:trigger-save");
-      editEl.dispatchEvent(edit_save_event);
+      editEl.current?.dispatchEvent(edit_save_event);
     }
-  }, [editEl, props.userOptions, props.mode] );
+  }, [props.userOptions, props.mode] );
   
   useEffect(() =>
   {
@@ -286,7 +285,7 @@ const EditControls = (props) =>
     {
       document.removeEventListener('rifftube:riff:edit:riff:finish', riffFinish, false);
     }
-  }, [editEl, props.userOptions, props.mode]);
+  }, [props.userOptions, props.mode]);
 
   
   

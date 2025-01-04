@@ -348,7 +348,7 @@ export const getAllRiffs = (videoID) => {
     }).then((res) => {
       dispatch({ type: RECEIVE_RIFF_META, payload: res.data });
     }).catch(error => {
-      dispatch({ type: RECEIVE_RIFF_META, payload: [] });
+      //dispatch({ type: RECEIVE_RIFF_META, payload: [] });
     });
   };
 };
