@@ -58,9 +58,11 @@ function RiffDetail(props)
   return (
     <div
       ref={divRef}
-      className={`riff-detail${props.selected ? ' riff-detail-selected' : ''}${
-        visible ? '' : ' invisible'
-      }`}
+      className={`riff-detail
+      ${props.selected ? ' riff-detail-selected' : ''}
+      ${visible ? '' : ' invisible'}
+      ${props.unsaved ? ' riff-saving' : ''}
+      `}
       style={props.style}
     >
       <button
