@@ -48,7 +48,6 @@ const riffsReducer = (state = initialState, action) => {
     {
       const riff = action.payload;
       delete riff.audio;
-      // riff.unsaved = true; // already done... better there or here?
 
       // create new riffs list, including new riff
       return (
@@ -62,7 +61,8 @@ const riffsReducer = (state = initialState, action) => {
       let id = action.payload.id;
       let tempId = action.payload.tempId;
       let riffs = { ...state };
-      riffs[id] = { ...riffs[tempId], id };
+      //riffs[id] = { ...riffs[tempId], id };
+      riffs[id] = action.payload
       delete riffs[id].unsaved;
       delete riffs[tempId];
       return riffs;
@@ -74,7 +74,6 @@ const riffsReducer = (state = initialState, action) => {
       // dup obj so that riffsAudio reducer can get the unaltered payload
       const riff = { ...action.payload };
       delete riff.audio;
-      // riff.unsaved = true; // already done... better there or here?
 
       let riffs = { ...state };
       riffs[riff.id] = riff;
@@ -83,10 +82,9 @@ const riffsReducer = (state = initialState, action) => {
     }
     case SAVE_EDIT_RIFF_SUCCESS:
     {
-      let id = action.payload;
+      let id = action.payload.id;
       let riffs = { ...state };
-      riffs[id] = { ...riffs[id] };
-      delete riffs[id].unsaved;
+      riffs[id] = action.payload;
       return riffs;
     }
     case WS_UPDATE_RIFF:

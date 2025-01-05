@@ -165,7 +165,7 @@ export const setFocusEl = payload =>
 
 export const saveEditRiff = (body, riff) =>
 {
-  debugger;
+  console.log("save edit riff", riff);
   return (dispatch) =>
   {
     const now = Date.now();
@@ -179,7 +179,7 @@ export const saveEditRiff = (body, riff) =>
       })
       .then(response => response.json())
       // update riff saved status
-      .then(response => dispatch({ type: SAVE_EDIT_RIFF_SUCCESS, payload: riff.id }))
+      .then(response => dispatch({ type: SAVE_EDIT_RIFF_SUCCESS, payload: response }))
       .catch(err => dispatch({ type: SAVE_EDIT_RIFF_FAILURE, payload: err }));
   }
 }
@@ -212,7 +212,7 @@ export const saveNewRiff = (body, riff) =>
       })
       .then(response => response.json())
       // update riff id and saved status
-      .then(response => dispatch({ type: SAVE_NEW_RIFF_SUCCESS, payload: {id: response.id, tempId} }))
+      .then(response => dispatch({ type: SAVE_NEW_RIFF_SUCCESS, payload: {...response, tempId} }))
       .catch(err => dispatch({ type: SAVE_NEW_RIFF_FAILURE, payload: err }));
   }
 }

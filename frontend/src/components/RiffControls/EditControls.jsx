@@ -210,18 +210,12 @@ const EditControls = (props) =>
     // detail is FormData
     //console.log( "sr", detail );
     
-    let riff = riffFD2Obj(detail);
+    const riff = riffFD2Obj(detail);
 
     console.log("save riff user info", riff, props.userInfo);
 
     // mark as unsaved
     riff.unsaved = true;
-
-    // add user id:
-    riff.user_id = props.userInfo.id;
-
-    //...action.payload,
-    //delete riff.payload;
     
     if ( riff.id )
     {
@@ -229,6 +223,8 @@ const EditControls = (props) =>
     }
     else
     {
+      // add user id:
+      riff.user_id = props.userInfo.id;
       props.saveNewRiff(detail, riff);
     }
 
