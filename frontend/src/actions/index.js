@@ -200,6 +200,8 @@ export const saveNewRiff = (body, riff) =>
 
   // special setup needed for new riffs:
   // 1 = voice, 2 = synth, 3 = no audio
+  // TODO: check, still necessary?
+  // maybe no because riff meta is returned by the server
   riff.isText = riff.riff_kind !== "1";
 
   return (dispatch) =>
@@ -314,20 +316,31 @@ export const setRiffPic = (payload) => {
 
 // updated to use get
 export const getRiffs = (videoID) => {
-  return (dispatch) => {
-    axios({
-      method: 'get',
-      url: `/riffs?video_id=${videoID}&user_id=self`,
-    }).then((res) => {
-      dispatch({ type: RECEIVE_RIFF_LIST, payload: res.data });
-    }).catch(err => console.log("error", err));
+  return (dispatch) =>
+  {
+    console.log("getRiffs action");
+    // wait to get both lists
+    // so the user's riffs can be removed
+    // from the list of other riffs
+    Promise.all([
+      axios({
+        method: 'get',
+        url: `/riffs?video_id=${videoID}&user_id=self`,
+      }),
+      axios({
+        method: 'get',
+        url: `/riffs?video_id=${videoID}`,
+      })
+    ]).then(
+      ([resMy, resAll]) =>
+      {
+        dispatch({ type: RECEIVE_RIFF_LIST, payload: resMy.data });
 
-    axios({
-      method: 'get',
-      url: `/riffs?video_id=${videoID}`,
-    }).then((res) => {
-      dispatch({ type: RECEIVE_RIFF_META, payload: res.data });
-    }).catch(err => console.log("error", err));
+        resAll.data = resAll.data.filter( el => resMy.data.find(sel => sel.id == el.id) == undefined );
+
+        dispatch({ type: RECEIVE_RIFF_META, payload: resAll.data });
+      }
+    )
   }
 };
 
