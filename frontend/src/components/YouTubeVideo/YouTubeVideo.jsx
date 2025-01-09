@@ -224,6 +224,25 @@ class YouTubeVideo extends React.Component
 
             this.showRiffer(riff);
 
+            // TODO: feed in user options as props
+            if (riff.speak)
+            {
+              const voiceInfo = JSON.parse(riff.voice);
+              
+              const utterThis = new SpeechSynthesisUtterance(riff.text);
+              utterThis.pitch = voiceInfo.pitch;
+              utterThis.rate = voiceInfo.rate;
+
+              let voices = speechSynthesis.getVoices();
+              for (let voice of voices)
+              {
+                  if (voiceInfo?.lang == voice.lang && voiceInfo?.name == voice.name)
+                    utterThis.voice = voice;
+              }
+              
+              speechSynthesis.speak(utterThis);
+            }
+
             if (!riff.isText) {
               if (!this.vol) {
                 this.vol = this.props.rifftubePlayer.getVolume();
