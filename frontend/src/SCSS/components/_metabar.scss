@@ -3,6 +3,36 @@
 .metabar-riffer-pic
 {
   width: 5rem;
+  vertical-align: middle;
+}
+
+.metabar-riffer-name-cont > div > input[type="checkbox"]
+{
+  position: absolute;
+  visibility: hidden;
+}
+
+.metabar-riffer-name-cont > div
+{
+  background-image: var(--riffer-pic-src);
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding-left: 6em;
+  line-height: 5em;
+  box-shadow: 
+    inset 0.25rem 0.25rem 0.25rem rgba(255, 255, 255, 0.5),
+    inset -0.25rem -0.25rem 0.25rem rgba(0, 0, 0, 0.5);
+  transition: box-shadow background-color 0.1s;
+
+  width: 15rem;
+}
+
+.metabar-riffer-name-cont > div:has(input[type="checkbox"]:checked)
+{
+  background-color: lightpink;
+  box-shadow: 
+    inset -0.25rem -0.25rem 0.25rem rgba(255, 255, 255, 0.5),
+    inset 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.5);
 }
 
 .container-riff-meta {

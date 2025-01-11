@@ -91,20 +91,19 @@ const NewMetabar = (props) =>
       <YouTubeVideo id={props.id} riffs={state.filteredRiffs} />
       {
         state.riffsByRiffer?.map(riffer => (
-          <div
+          <label
             className="metabar-riffer-name-cont"
-            key={riffer.user_id}>
-            <img
-              className="metabar-riffer-pic"
-              alt={`${riffer.name}`}
-              src={`/riffer-pic/${riffer.user_id}.png`}
-            />
-            <input
-              type="checkbox"
-              checked={!riffer.muted}
-              onChange={() => toggleMute(riffer.user_id)} />
-            {riffer.name} ({riffer.user_id})
-          </div>
+          >
+            <div
+              key={riffer.user_id}
+              style={{"--riffer-pic-src": `url(/riffer-pic/${riffer.user_id}.png)`}}>
+              <input
+                type="checkbox"
+                checked={!riffer.muted}
+                onChange={() => toggleMute(riffer.user_id)} />
+              {riffer.name} ({riffer.user_id})
+            </div>
+          </label>
         ))
       }
     </React.Fragment>
