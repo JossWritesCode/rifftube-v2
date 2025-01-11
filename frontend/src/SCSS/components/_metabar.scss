@@ -14,10 +14,12 @@
 
 .metabar-riffer-name-cont > div
 {
+  cursor: pointer;
   background-image: var(--riffer-pic-src);
   background-repeat: no-repeat;
   background-size: contain;
   padding-left: 6rem;
+  padding-right: 1rem;
   line-height: 5rem;
   font-size: 2rem;
   box-shadow: 
@@ -44,6 +46,32 @@
     inset -0.25rem -0.25rem 0.25rem rgba(255, 255, 255, 0.5),
     inset 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.5);
 }
+
+.metabar-riffer-name-id-flex
+{
+  display: flex;
+}
+
+.metabar-riffer-name
+{
+  /*
+  flex-shrink: 1;
+  */
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  width: calc(100% - 8rem);
+  overflow: hidden;
+}
+
+.metabar-riffer-id
+{
+  width: max-content;
+}
+
+
+
+/* older code */
 
 .container-riff-meta {
   display: flex;

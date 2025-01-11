@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import YouTubeVideo from './YouTubeVideo/YouTubeVideo';
-import MetabarRiffer from './MetabarRiffer';
 
 /*
   props:
@@ -102,7 +101,14 @@ const NewMetabar = (props) =>
                 type="checkbox"
                 defaultChecked={!riffer.muted}
                 onChange={() => toggleMute(riffer.user_id)} />
-              {riffer.name} ({riffer.user_id})
+              <div className="metabar-riffer-name-id-flex">
+                <span className="metabar-riffer-name">
+                  {riffer.name}
+                </span>
+                <span className="metabar-riffer-id">
+                  ({riffer.user_id})
+                </span>
+              </div>
             </div>
           </label>
         ))
