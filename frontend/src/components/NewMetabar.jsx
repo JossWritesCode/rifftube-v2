@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import YouTubeVideo from './YouTubeVideo/YouTubeVideo';
+import MetabarRiffer from './MetabarRiffer';
 
 /*
   props:
@@ -99,7 +100,7 @@ const NewMetabar = (props) =>
               style={{"--riffer-pic-src": `url(/riffer-pic/${riffer.user_id}.png)`}}>
               <input
                 type="checkbox"
-                checked={!riffer.muted}
+                defaultChecked={!riffer.muted}
                 onChange={() => toggleMute(riffer.user_id)} />
               {riffer.name} ({riffer.user_id})
             </div>
