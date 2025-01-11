@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import AuthorSelector from './AuthorSelector.jsx';
+import NewMetabar from '../NewMetabar.jsx';
 import { setVideoID, getAllRiffs, setAudioPlayers, setAudioPlayerNotInUse } from '../../actions/index.js';
 import NavBar from '../NavBar.jsx';
 
@@ -74,7 +75,7 @@ useEffect(
 
         <div style={{ marginTop: '4em', width: '100%' }}>
           <h1>View {params.videoID}</h1>
-          <AuthorSelector
+          <NewMetabar
             duration={props.duration}
             videoID={params.videoID}
             riffs={Object.values(props.riffs ?? {})}

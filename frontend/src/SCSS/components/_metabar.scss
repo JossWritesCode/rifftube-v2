@@ -1,5 +1,10 @@
 @use "../abstract/variables";
 
+.metabar-riffer-pic
+{
+  width: 5rem;
+}
+
 .container-riff-meta {
   display: flex;
   height: variables.$small;

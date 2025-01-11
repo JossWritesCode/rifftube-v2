@@ -30,12 +30,12 @@ const UserList = () =>
             userList &&
             userList.map(({ id, name }) => (
             <li className="my-video">
-                    <Link to={`/profile/${id}`}>
-                        <img
-                        alt={`${name}`}
-                        src={`/riffer-pic/${id}.png`}
-                        style={ {width: "5em", verticalAlign: "middle"} }
-                        />
+              <Link to={`/profile/${id}`}>
+                <img
+                  alt={`${name}`}
+                  src={`/riffer-pic/${id}.png`}
+                  style={ {width: "5em", verticalAlign: "middle"} }
+                />
                 <h3 className="my-video-title" style={{display: "inline-block"}}>
                     &nbsp; {`${name}`}
                     <br />
