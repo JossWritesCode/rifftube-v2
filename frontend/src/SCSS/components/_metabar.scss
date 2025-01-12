@@ -1,9 +1,9 @@
 @use "../abstract/variables";
 
-.metabar-riffer-pic
+.metabar-riffer-name-cont
 {
-  width: 5rem;
-  vertical-align: middle;
+  display: block;
+  width: min-content;
 }
 
 .metabar-riffer-name-cont > div > input[type="checkbox"]

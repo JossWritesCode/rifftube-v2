@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import YouTubeVideo from './YouTubeVideo/YouTubeVideo';
+import { setMetaBarPlayhead, setMetaBarCallback } from '../actions';
 
 /*
   props:
@@ -17,6 +18,12 @@ const NewMetabar = (props) =>
   // real values don't matter for the initialization maybe
   const [state, setState] = useState({ riffsByRiffer: [], myRiffs: null, filteredRiffs: [] });
   const [search, setSearch] = useSearchParams();
+
+  useEffect(
+    () => props.setMetaBarPlayhead(createRef()),
+    []
+  );
+  
 
   // logic here is: use the opposite of muted,
   // unless toggling this riffer, then use muted:
@@ -84,44 +91,58 @@ const NewMetabar = (props) =>
       filteredRiffs: props.riffs.filter(riff => rifferList.includes(riff.user_id) && !riff.muted),
     });
   }, [search.get("solo"), props.riffs, props.timestamp]);
-
+  // TODO: remove timestamp stuff, I think
 
   return (
     <React.Fragment>
       <YouTubeVideo id={props.id} riffs={state.filteredRiffs} />
-      {
-        state.riffsByRiffer?.map(riffer => (
-          <label
-            className="metabar-riffer-name-cont"
-          >
+      <div className="metabar-cont">
+        {
+          state.riffsByRiffer?.map(riffer => (
             <div
-              key={riffer.user_id}
-              style={{"--riffer-pic-src": `url(/riffer-pic/${riffer.user_id}.png)`}}>
-              <input
-                type="checkbox"
-                defaultChecked={!riffer.muted}
-                onChange={() => toggleMute(riffer.user_id)} />
-              <div className="metabar-riffer-name-id-flex">
-                <span className="metabar-riffer-name">
-                  {riffer.name}
-                </span>
-                <span className="metabar-riffer-id">
-                  ({riffer.user_id})
-                </span>
+              className="metabar-riffer-cont"
+              key={riffer.user_id}>
+              <label className="metabar-riffer-name-cont">
+                <div
+                  style={{"--riffer-pic-src": `url(/riffer-pic/${riffer.user_id}.png)`}}>
+                  <input
+                    type="checkbox"
+                    defaultChecked={!riffer.muted}
+                    onChange={() => toggleMute(riffer.user_id)} />
+                  <div className="metabar-riffer-name-id-flex">
+                    <span className="metabar-riffer-name">
+                      {riffer.name}
+                    </span>
+                    <span className="metabar-riffer-id">
+                      ({riffer.user_id})
+                    </span>
+                  </div>
+                </div>
+              </label>
+              <div className="metabar-riffer-tracks">
+
               </div>
             </div>
-          </label>
-        ))
-      }
+          ))
+        }
+      </div>
     </React.Fragment>
   );
 }
 
+
 const mapStateToProps = (state) => ({
-  timestamp: state.riffs.timestamp,
+  metaBarPlayhead: state.metaBarPlayhead,
+  metaBarCallback: state.metaBarCallback,
+  timestamp: state.riffs.timestamp, // TODO: check: unneeded?
 });
 
-export default connect(mapStateToProps, null)(NewMetabar);
+const mapDispatchToProps = {
+  setMetaBarPlayhead,
+  setMetaBarCallback,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewMetabar);
 
 /*
 state.names.map((el) => (
