@@ -77,7 +77,7 @@ useEffect(
           <h1>View {params.videoID}</h1>
           <NewMetabar
             duration={props.duration}
-            videoID={params.videoID}
+            id={params.videoID}
             riffs={Object.values(props.riffs ?? {})}
           />
         </div>

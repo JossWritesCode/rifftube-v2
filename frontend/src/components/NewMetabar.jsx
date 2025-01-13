@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import YouTubeVideo from './YouTubeVideo/YouTubeVideo';
@@ -16,11 +16,16 @@ import { setMetaBarPlayhead, setMetaBarCallback } from '../actions';
 const NewMetabar = (props) =>
 {
   // real values don't matter for the initialization maybe
-  const [state, setState] = useState({ riffsByRiffer: [], myRiffs: null, filteredRiffs: [] });
+  const [state, setState] = useState({ riffsByRiffer: [], myTracks: null, filteredRiffs: [] });
   const [search, setSearch] = useSearchParams();
 
+  const playhead = useRef();
+
   useEffect(
-    () => props.setMetaBarPlayhead(createRef()),
+    () => 
+    {
+      props.setMetaBarPlayhead(playhead)
+    },
     []
   );
   
@@ -40,7 +45,7 @@ const NewMetabar = (props) =>
 
   useEffect( () =>
   {
-    // create list of riffers to play from the 'search' part of the URL
+    // create list of riffers to play from the 'search' part of the URL.
     // is this readable or no?
     // search.get() may be a string, or undefined.
     // .split() will work even with no comma.
@@ -48,18 +53,35 @@ const NewMetabar = (props) =>
     // .map(Number) is like .map(el => Number(el))
     const rifferList = search.get("solo")?.split(',').map(Number) ?? [];
 
-    // riffsByRiffer = [ { user_id: number, name: string, muted: bool, riffs: [{ muted: bool, ...}] }, ... ]
+    // riffsByRiffer = [ { user_id: number, name: string, muted: bool, tracks: [[{ muted: bool, ...}]] }, ... ]
     const riffsByRiffer = [];
-    const myRiffs = props.userInfo ? [] : null;
+    const myTracks = props.userInfo ? [[]] : null;
     
+    const pushToTrack = (riff, tracks) =>
+    {
+      for (let track in tracks)
+      {
+        const last = track.at(-1);
+        if (last != null && last.start + last.duration < riff.start)
+        {
+          track.push(riff);
+          return;
+        }
+      }
+
+      // open track not found
+      tracks.push([riff]);
+    };
+
     props.riffs.forEach( riff =>
     {
-      // if the user is logged in, and this riff is the users, add to myRiffs
+      // if the user is logged in, and this riff is the users, add to myTracks
       // otherwise, add to riffsByRiffer
       if (props.userInfo && props.userInfo.id == riff.user_id)
       {
         // add a muted field, starts false
-        myRiffs.push({...riff, muted: false});
+        //myRiffs.push({...riff, muted: false});
+        pushToTrack({...riff, muted: false}, myTracks);
       }
       else
       {
@@ -67,7 +89,8 @@ const NewMetabar = (props) =>
 
         if (fer)
         {
-          fer.riffs.push({...riff, muted: false});
+          //fer.riffs.push({...riff, muted: false});
+          pushToTrack({...riff, muted: false}, fer.tracks);
         }
         else
         {
@@ -76,18 +99,18 @@ const NewMetabar = (props) =>
             user_id: riff.user_id,
             name: riff.name,
             muted: !rifferList.includes(riff.user_id),
-            riffs: [{...riff, muted: false}]
+            tracks: [[{...riff, muted: false}]]
           });
         }
       }
     } );
 
-    console.log("metabar riffer setup", riffsByRiffer, myRiffs);
+    console.log("metabar riffer setup", riffsByRiffer, myTracks);
 
-    // default: { riffByRiffer: [], myRiffs: null, filteredRiffs: [] }
+    // default: { riffByRiffer: [], myTracks: null, filteredRiffs: [] }
     setState({
       riffsByRiffer,
-      myRiffs,
+      myTracks,
       filteredRiffs: props.riffs.filter(riff => rifferList.includes(riff.user_id) && !riff.muted),
     });
   }, [search.get("solo"), props.riffs, props.timestamp]);
@@ -97,6 +120,7 @@ const NewMetabar = (props) =>
     <React.Fragment>
       <YouTubeVideo id={props.id} riffs={state.filteredRiffs} />
       <div className="metabar-cont">
+        <div className="metabar-riffers">
         {
           state.riffsByRiffer?.map(riffer => (
             <div
@@ -119,12 +143,38 @@ const NewMetabar = (props) =>
                   </div>
                 </div>
               </label>
-              <div className="metabar-riffer-tracks">
-
-              </div>
             </div>
           ))
         }
+        </div>
+        <div className="metabar-tracks">
+          <div className="metabar-tracks-scroll">
+          {
+            state.riffsByRiffer?.map(riffer => (
+              <div
+                className="metabar-riffer-tracks-cont"
+                key={riffer.user_id}>
+              {
+                riffer.tracks.map((track, ind) => (
+                  <div className="metabar-riffer-track" key={ind}>
+                    {
+                      track.map(riff => (
+                        <div
+                          key={riff.id}
+                          style={{"--start": riff.start / props.duration, "--duration": riff.duration / props.duration}}
+                          className="metabar-riffer-track-riff">
+                            {riff.start} / {props.duration} = {riff.start / props.duration}
+                        </div>
+                      ))
+                    }
+                  </div>
+                ))
+              }
+              </div>
+            ))
+          }
+          </div>
+        </div>
       </div>
     </React.Fragment>
   );
