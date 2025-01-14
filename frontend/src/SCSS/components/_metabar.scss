@@ -3,6 +3,7 @@
 .metabar-cont
 {
   display: flex;
+  overflow: hidden;
 }
 
 .metabar-riffers
@@ -13,6 +14,22 @@
 .metabar-tracks
 {
   flex-grow: 1;
+}
+
+.metabar-riffer-track
+{
+  line-height: 5rem;
+  position: relative;
+}
+
+.metabar-riffer-track-riff
+{
+  position: absolute;
+  left: calc(var(--start)* 100%);
+  width: calc(var(--duration)* 100%);
+  height: 5rem;
+  overflow: hidden;
+  background-color: var(--bgcolor);
 }
 
 .metabar-riffer-name-cont

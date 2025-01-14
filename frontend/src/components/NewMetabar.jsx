@@ -62,7 +62,6 @@ const NewMetabar = (props) =>
       for (let track of tracks)
       {
         const last = track.at(-1);
-        console.log("pushing, checking", last, riff);
         if (last != null && last.start + last.duration < riff.start)
         {
           track.push(riff);
@@ -87,7 +86,6 @@ const NewMetabar = (props) =>
       else
       {
         const fer = riffsByRiffer.find(rfr => rfr.user_id == riff.user_id);
-        console.log(fer, "from", riff);
 
         if (fer)
         {
@@ -150,21 +148,34 @@ const NewMetabar = (props) =>
           ))
         }
         </div>
+        <div className="disc-cont">
+          <label className="disc">
+            <input type="checkbox" className="disc-cb" />
+          </label>
+        </div>
         <div className="metabar-tracks">
           <div className="metabar-tracks-scroll">
           {
             state.riffsByRiffer?.map(riffer => (
               <div
+                style={{"--trackN": riffer.tracks.length}}
                 className="metabar-riffer-tracks-cont"
                 key={riffer.user_id}>
               {
                 riffer.tracks.map((track, ind) => (
-                  <div className="metabar-riffer-track" key={ind}>
+                  <div
+                    style={{"--track-num": ind}}
+                    className="metabar-riffer-track"
+                    key={ind}>
                     {
                       track.map(riff => (
                         <div
                           key={riff.id}
-                          style={{"--start": riff.start / props.duration, "--duration": riff.duration / props.duration}}
+                          style={{
+                            "--start": riff.start / props.duration,
+                            "--duration": riff.duration / props.duration,
+                            "--bgcolor": riffer.muted ? "rgba(100, 100, 100, 0.3)" : "rgba(255, 100, 100, 0.3)"
+                          }}
                           className="metabar-riffer-track-riff">
                             {riff.start} / {props.duration} = {riff.start / props.duration}
                         </div>
