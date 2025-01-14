@@ -59,9 +59,10 @@ const NewMetabar = (props) =>
     
     const pushToTrack = (riff, tracks) =>
     {
-      for (let track in tracks)
+      for (let track of tracks)
       {
         const last = track.at(-1);
+        console.log("pushing, checking", last, riff);
         if (last != null && last.start + last.duration < riff.start)
         {
           track.push(riff);
@@ -86,6 +87,7 @@ const NewMetabar = (props) =>
       else
       {
         const fer = riffsByRiffer.find(rfr => rfr.user_id == riff.user_id);
+        console.log(fer, "from", riff);
 
         if (fer)
         {
@@ -95,6 +97,7 @@ const NewMetabar = (props) =>
         else
         {
           console.log("new riffer with riff", riff);
+          
           riffsByRiffer.push({
             user_id: riff.user_id,
             name: riff.name,
