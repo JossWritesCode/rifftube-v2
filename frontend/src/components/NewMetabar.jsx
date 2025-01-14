@@ -53,7 +53,13 @@ const NewMetabar = (props) =>
     // .map(Number) is like .map(el => Number(el))
     const rifferList = search.get("solo")?.split(',').map(Number) ?? [];
 
-    // riffsByRiffer = [ { user_id: number, name: string, muted: bool, tracks: [[{ muted: bool, ...}]] }, ... ]
+    // riffsByRiffer = [ {
+    //  user_id: number,
+    //  name: string,
+    //  muted: bool,
+    //  open: bool,
+    //  tracks: [[{ muted: bool, ...}]] },
+    //   ... ]
     const riffsByRiffer = [];
     const myTracks = props.userInfo ? [[]] : null;
     
@@ -100,6 +106,7 @@ const NewMetabar = (props) =>
             user_id: riff.user_id,
             name: riff.name,
             muted: !rifferList.includes(riff.user_id),
+            open: false,
             tracks: [[{...riff, muted: false}]]
           });
         }
@@ -125,7 +132,8 @@ const NewMetabar = (props) =>
         {
           state.riffsByRiffer?.map(riffer => (
             <div
-              className="metabar-riffer-cont"
+              style={{"--trackN": riffer.tracks.length}}
+              className={`metabar-riffer-cont ${riffer.open ? 'metabar-open' : ''}`}
               key={riffer.user_id}>
               <label className="metabar-riffer-name-cont">
                 <div
@@ -148,10 +156,30 @@ const NewMetabar = (props) =>
           ))
         }
         </div>
-        <div className="disc-cont">
-          <label className="disc">
-            <input type="checkbox" className="disc-cb" />
-          </label>
+        <div>
+        {
+          state.riffsByRiffer?.map(riffer => (
+          <div
+            style={{"--trackN": riffer.tracks.length}}
+            key={riffer.user_id}
+            className={`disc-cont ${riffer.open ? 'metabar-open' : ''}`}>
+            {
+              riffer.tracks.length > 1
+              ?
+                (
+                  <label className="disc">
+                    <input type="checkbox" className="disc-cb"
+                      onChange={() => {const riffsByRiffer = [...state.riffsByRiffer]; const r = riffsByRiffer.find(rfr => rfr.user_id == riffer.user_id); r.open = !r.open; setState({...state, riffsByRiffer});}}
+                      value={riffer.open} />
+                  </label>
+                )
+              :
+                null
+            }
+            
+          </div>
+          ))
+        }
         </div>
         <div className="metabar-tracks">
           <div className="metabar-tracks-scroll">
@@ -159,7 +187,7 @@ const NewMetabar = (props) =>
             state.riffsByRiffer?.map(riffer => (
               <div
                 style={{"--trackN": riffer.tracks.length}}
-                className="metabar-riffer-tracks-cont"
+                className={`metabar-riffer-tracks-cont ${riffer.open ? 'metabar-open' : ''}`}
                 key={riffer.user_id}>
               {
                 riffer.tracks.map((track, ind) => (

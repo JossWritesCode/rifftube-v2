@@ -16,10 +16,31 @@
   flex-grow: 1;
 }
 
+.metabar-riffer-tracks-cont
+{
+  height: 5rem;
+  position: relative;
+  transition: height 0.1s;
+}
+
+.metabar-open
+{
+  height: calc(5rem * var(--trackN));
+}
+
+.metabar-riffer-tracks-cont.metabar-open > .metabar-riffer-track
+{
+  top: calc(5rem * var(--track-num));
+}
+
 .metabar-riffer-track
 {
+  width: 100%;
+  height: 5rem;
   line-height: 5rem;
-  position: relative;
+  position: absolute;
+  transition: top 0.1s;
+  top: 0;
 }
 
 .metabar-riffer-track-riff
