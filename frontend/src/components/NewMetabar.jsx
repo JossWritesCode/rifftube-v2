@@ -121,7 +121,7 @@ const NewMetabar = (props) =>
             user_id: riff.user_id,
             name: riff.name,
             muted: !rifferList.includes(riff.user_id),
-            open: false,
+            open: state.riffsByRiffer.find(rfr => rfr.user_id == riff.user_id)?.open,
             tracks: [[{...riff, muted: false}]]
           });
         }
