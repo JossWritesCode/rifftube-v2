@@ -11,9 +11,16 @@
   width: max-content;
 }
 
+.metabar-tracks-scroll
+{
+  min-width: 100%;
+}
+
 .metabar-tracks
 {
   flex-grow: 1;
+  width: calc(100% - 26rem);
+  overflow-x: hidden;
 }
 
 .metabar-riffer-tracks-cont

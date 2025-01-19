@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import YouTubeVideo from './YouTubeVideo/YouTubeVideo';
@@ -18,17 +18,32 @@ const NewMetabar = (props) =>
   // real values don't matter for the initialization maybe
   const [state, setState] = useState({ riffsByRiffer: [], myTracks: null, filteredRiffs: [] });
   const [search, setSearch] = useSearchParams();
-
+  
+  const scrollDiv = useRef();
   const playhead = useRef();
+
+  const mbc = useCallback(() =>
+  {
+    // is this the stupidest thing ever?
+    (scrollDiv.current || {}).scrollLeft = props.metaBarPlayhead?.current?.offsetLeft - scrollDiv.current?.offsetWidth / 2;
+  },
+  [props.metaBarPlayhead]);
 
   useEffect(
     () => 
     {
-      props.setMetaBarPlayhead(playhead)
+      props.setMetaBarPlayhead(playhead);
     },
     []
   );
   
+  useEffect(
+    () => 
+    {
+      props.setMetaBarCallback(mbc);
+    },
+    [props.metaBarPlayhead]
+  );
 
   // logic here is: use the opposite of muted,
   // unless toggling this riffer, then use muted:
@@ -181,7 +196,7 @@ const NewMetabar = (props) =>
           ))
         }
         </div>
-        <div className="metabar-tracks">
+        <div className="metabar-tracks" ref={scrollDiv}>
           <div className="metabar-tracks-scroll">
           {
             state.riffsByRiffer?.map(riffer => (
@@ -212,6 +227,11 @@ const NewMetabar = (props) =>
                   </div>
                 ))
               }
+              <div
+                id="meta-play-head"
+                style={{ backgroundColor: 'red', height: 'inherit' }}
+                ref={props.metaBarPlayhead}
+              />
               </div>
             ))
           }
