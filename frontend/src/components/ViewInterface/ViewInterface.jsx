@@ -73,7 +73,7 @@ useEffect(
           </div>
         </dialog>
 
-        <div style={{ marginTop: '4em', width: '100%' }}>
+        <div>
           <h1>View {params.videoID}</h1>
           <NewMetabar
             duration={props.duration}
