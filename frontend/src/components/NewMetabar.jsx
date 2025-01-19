@@ -94,7 +94,9 @@ const NewMetabar = (props) =>
       tracks.push([riff]);
     };
 
-    props.riffs.forEach( riff =>
+    props.riffs.toSorted(
+      (e1, e2) => e1.start - e2.start
+    ).forEach( riff =>
     {
       // if the user is logged in, and this riff is the users, add to myTracks
       // otherwise, add to riffsByRiffer
