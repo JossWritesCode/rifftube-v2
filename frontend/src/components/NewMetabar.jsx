@@ -200,6 +200,11 @@ const NewMetabar = (props) =>
         </div>
         <div className="metabar-tracks" ref={scrollDiv}>
           <div className="metabar-tracks-scroll">
+          <div
+            id="meta-play-head"
+            style={{ backgroundColor: 'red', height: 'inherit' }}
+            ref={props.metaBarPlayhead}
+          />
           {
             state.riffsByRiffer?.map(riffer => (
               <div
@@ -229,11 +234,6 @@ const NewMetabar = (props) =>
                   </div>
                 ))
               }
-              <div
-                id="meta-play-head"
-                style={{ backgroundColor: 'red', height: 'inherit' }}
-                ref={props.metaBarPlayhead}
-              />
               </div>
             ))
           }
