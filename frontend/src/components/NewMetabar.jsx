@@ -25,7 +25,17 @@ const NewMetabar = (props) =>
   const mbc = useCallback(() =>
   {
     // is this the stupidest thing ever?
-    (scrollDiv.current || {}).scrollLeft = props.metaBarPlayhead?.current?.offsetLeft - scrollDiv.current?.offsetWidth / 2;
+    const halfVid = scrollDiv.current?.parentElement.offsetWidth / 2
+    const fullWidth = scrollDiv.current?.offsetWidth;
+    const curPos = props.metaBarPlayhead?.current?.offsetLeft
+    const offset = curPos - halfVid;
+    console.log("mbc", offset);
+    (scrollDiv.current || {}).style.left =
+      (curPos > halfVid && curPos < fullWidth - halfVid)
+      ?
+        `${-offset}px`
+      :
+        Math.max(0, Math.min(fullWidth - halfVid, offset));
   },
   [props.metaBarPlayhead]);
 
@@ -198,8 +208,12 @@ const NewMetabar = (props) =>
           ))
         }
         </div>
-        <div className="metabar-tracks" ref={scrollDiv}>
-          <div className="metabar-tracks-scroll">
+        <div
+          className="metabar-tracks">
+          <div
+            ref={scrollDiv}
+            style={{width: `${props.duration * 2}rem`}}
+            className="metabar-tracks-scroll">
             <div
               id="meta-play-head"
               ref={props.metaBarPlayhead}
