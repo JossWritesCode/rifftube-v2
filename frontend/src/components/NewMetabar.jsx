@@ -29,7 +29,7 @@ const NewMetabar = (props) =>
     const fullWidth = scrollDiv.current?.offsetWidth;
     const curPos = props.metaBarPlayhead?.current?.offsetLeft
     const offset = curPos - halfVid;
-    console.log("mbc", offset);
+    //console.log("mbc", offset);
     (scrollDiv.current || {}).style.left =
       (curPos > halfVid && curPos < fullWidth - halfVid)
       ?
