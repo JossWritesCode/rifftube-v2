@@ -200,40 +200,39 @@ const NewMetabar = (props) =>
         </div>
         <div className="metabar-tracks" ref={scrollDiv}>
           <div className="metabar-tracks-scroll">
-          <div
-            id="meta-play-head"
-            style={{ backgroundColor: 'red', height: 'inherit' }}
-            ref={props.metaBarPlayhead}
-          />
-          {
-            state.riffsByRiffer?.map(riffer => (
-              <div
-                style={{"--trackN": riffer.tracks.length}}
-                className={`metabar-riffer-tracks-cont ${riffer.open ? 'metabar-open' : ''}`}
-                key={riffer.user_id}>
-              {
-                riffer.tracks.map((track, ind) => (
-                  <div
-                    style={{"--track-num": ind}}
-                    className="metabar-riffer-track"
-                    key={ind}>
-                    {
-                      track.map(riff => (
-                        <div
-                          key={riff.id}
-                          style={{
-                            "--start": riff.start / props.duration,
-                            "--duration": riff.duration / props.duration,
-                            "--bgcolor": riffer.muted ? "rgba(100, 100, 100, 0.3)" : "rgba(255, 100, 100, 0.3)"
-                          }}
-                          className="metabar-riffer-track-riff">
-                            {riff.start} / {props.duration} = {riff.start / props.duration}
-                        </div>
-                      ))
-                    }
-                  </div>
-                ))
-              }
+            <div
+              id="meta-play-head"
+              ref={props.metaBarPlayhead}
+            />
+            {
+              state.riffsByRiffer?.map(riffer => (
+                <div
+                  style={{"--trackN": riffer.tracks.length}}
+                  className={`metabar-riffer-tracks-cont ${riffer.open ? 'metabar-open' : ''}`}
+                  key={riffer.user_id}>
+                {
+                  riffer.tracks.map((track, ind) => (
+                    <div
+                      style={{"--track-num": ind}}
+                      className="metabar-riffer-track"
+                      key={ind}>
+                      {
+                        track.map(riff => (
+                          <div
+                            key={riff.id}
+                            style={{
+                              "--start": riff.start / props.duration,
+                              "--duration": riff.duration / props.duration,
+                              "--bgcolor": riffer.muted ? "rgba(100, 100, 100, 0.3)" : "rgba(255, 100, 100, 0.3)"
+                            }}
+                            className="metabar-riffer-track-riff">
+                              {riff.start} / {props.duration} = {riff.start / props.duration}
+                          </div>
+                        ))
+                      }
+                    </div>
+                  ))
+                }
               </div>
             ))
           }
