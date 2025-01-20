@@ -270,7 +270,7 @@ const NewMetabar = (props) =>
                         track.map(riff => (
                           <div
                             key={riff.id}
-                            onClick={() => setShowRiff(showRiff ? null : riff)}
+                            onClick={() => setShowRiff(showRiff?.id == riff.id ? null : riff)}
                             style={{
                               "--start": riff.start / props.duration,
                               "--duration": riff.duration / props.duration,
