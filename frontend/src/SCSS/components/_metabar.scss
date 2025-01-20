@@ -69,6 +69,8 @@
   height: 5rem;
   overflow: hidden;
   background-color: var(--bgcolor);
+  border: 1rem solid transparent;
+  box-sizing: border-box;
 }
 
 .metabar-riffer-name-cont
