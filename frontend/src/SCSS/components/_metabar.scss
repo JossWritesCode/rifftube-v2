@@ -1,5 +1,11 @@
 @use "../abstract/variables";
 
+.metabar-tracks-scroll.metabar-zoomed
+{
+  width: calc(var(--duration) * 2.5rem);
+  left: var(--scroll);
+}
+
 .metabar-cont
 {
   display: flex;
@@ -15,6 +21,10 @@
 {
   min-width: 100%;
   position: relative;
+
+  width: 100%;
+
+  transition: 0.1s all linear;
 }
 
 .metabar-tracks

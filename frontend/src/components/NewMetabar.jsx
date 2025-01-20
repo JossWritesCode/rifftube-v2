@@ -17,6 +17,7 @@ const NewMetabar = (props) =>
 {
   // real values don't matter for the initialization maybe
   const [state, setState] = useState({ riffsByRiffer: [], myTracks: null, filteredRiffs: [] });
+  const [zoomState, setZoomState] = useState(false);
   const [search, setSearch] = useSearchParams();
   
   const scrollDiv = useRef();
@@ -30,12 +31,12 @@ const NewMetabar = (props) =>
     const curPos = props.metaBarPlayhead?.current?.offsetLeft
     const offset = halfVid - curPos;
     //console.log("mbc", offset);
-    (scrollDiv.current || {}).style.left =
+    (scrollDiv.current || {}).style.setProperty("--scroll",
       (curPos > halfVid && curPos < fullWidth - halfVid)
       ?
         `${offset}px`
       :
-        Math.min(0, Math.max(halfVid - fullWidth, offset));
+        Math.min(0, Math.max(halfVid - fullWidth, offset)));
   },
   [props.metaBarPlayhead]);
 
@@ -153,7 +154,11 @@ const NewMetabar = (props) =>
 
   return (
     <React.Fragment>
-      <YouTubeVideo id={props.id} riffs={state.filteredRiffs} />
+      <YouTubeVideo
+        id={props.id}
+        zoomState={zoomState}
+        setZoomState={setZoomState}
+        riffs={state.filteredRiffs} />
       <div className="metabar-cont">
         <div className="metabar-riffers">
         {
@@ -212,8 +217,8 @@ const NewMetabar = (props) =>
           className="metabar-tracks">
           <div
             ref={scrollDiv}
-            style={{width: `${props.duration * 2}rem`}}
-            className="metabar-tracks-scroll">
+            style={{"--duration": props.duration}}
+            className={`metabar-tracks-scroll ${zoomState ? 'metabar-zoomed' : ''}`}>
             <div
               id="meta-play-head"
               ref={props.metaBarPlayhead}

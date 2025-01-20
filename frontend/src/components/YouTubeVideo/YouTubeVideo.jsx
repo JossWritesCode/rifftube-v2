@@ -13,8 +13,14 @@ import {
   PLAY_MODE,
   PAUSE_MODE,
 } from '../../actions/index.js';
+import VideoSidebar from './VideoSidebar.jsx';
 
 // based on https://stackoverflow.com/questions/54017100/how-to-integrate-youtube-iframe-api-in-reactjs-solution
+
+/*
+  props:
+    zoomState, setZoomState
+*/
 
 class YouTubeVideo extends React.Component
 {
@@ -373,6 +379,9 @@ class YouTubeVideo extends React.Component
       <React.Fragment>
         <div className="rifftube-container">
           {/* <AllowPlayback />*/}
+          <VideoSidebar
+            zoomState={this.props.zoomState}
+            setZoomState={this.props.setZoomState} />
           <div className="rifftube-overlay">
             <div className="rifftube-riffs-container">
               <div className="rifftube-riffers" ref={this.riffersRef}></div>
