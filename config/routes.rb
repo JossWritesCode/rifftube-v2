@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   resources :riffs
 
+  
   '''
   GET	/photos	photos#index	display a list of all photos
   GET	/photos/new	photos#new	return an HTML form for creating a new photo
@@ -28,7 +29,8 @@ Rails.application.routes.draw do
   PATCH	/photos/:id	photos#update	update a specific photo
   DELETE	/photos/:id	photos#destroy	delete a specific photo
   '''
-
+  
+  get 'riffs/:id/meta', to: "riffs#showmeta"
   get 'riffs/:id/modify_start', to: "riffs#modify_start"
 
   # URL: GET /riffs?video_id=xxx[&user_id={"self", yyy}]

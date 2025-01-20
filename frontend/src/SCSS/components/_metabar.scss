@@ -1,5 +1,164 @@
 @use "../abstract/variables";
 
+.metabar-tracks-scroll.metabar-zoomed
+{
+  width: calc(var(--duration) * 2.5rem);
+  left: var(--scroll);
+}
+
+.metabar-cont
+{
+  display: flex;
+  overflow: hidden;
+}
+
+.metabar-riffers
+{
+  width: max-content;
+}
+
+.metabar-tracks-scroll
+{
+  min-width: 100%;
+  position: relative;
+
+  width: 100%;
+
+  transition: 0.1s all linear;
+}
+
+.metabar-tracks
+{
+  flex-grow: 1;
+  width: calc(100% - 26rem);
+  overflow-x: hidden;
+}
+
+.metabar-riffer-tracks-cont
+{
+  height: 5rem;
+  position: relative;
+  transition: height 0.1s;
+}
+
+.metabar-open
+{
+  height: calc(5rem * var(--trackN));
+}
+
+.metabar-riffer-tracks-cont.metabar-open > .metabar-riffer-track
+{
+  top: calc(5rem * var(--track-num));
+}
+
+.metabar-riffer-track
+{
+  width: 100%;
+  height: 5rem;
+  line-height: 5rem;
+  position: absolute;
+  transition: top 0.1s;
+  top: 0;
+  pointer-events: none;
+}
+
+.metabar-zoomed .metabar-riffer-track-riff
+{
+  border-left-width: 1rem;
+  border-right-width: 1rem;
+}
+
+.metabar-riffer-track-riff
+{
+  cursor: pointer;
+  position: absolute;
+  left: calc(var(--start) * 100%);
+  width: calc(var(--duration) * 100%);
+  height: 5rem;
+  overflow: hidden;
+  background-color: var(--bgcolor);
+  border: 1rem solid transparent;
+  border-top-width: 1rem;
+  border-bottom-width: 1rem;
+  border-left-width: 0;
+  border-right-width: 0;
+  box-sizing: border-box;
+  pointer-events: all;
+}
+
+.metabar-riffer-name-cont
+{
+  display: block;
+  width: min-content;
+}
+
+.metabar-riffer-name-cont > div > input[type="checkbox"]
+{
+  position: absolute;
+  visibility: hidden;
+}
+
+.metabar-riffer-name-cont > div
+{
+  cursor: pointer;
+  background-image: var(--riffer-pic-src);
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding-left: 6rem;
+  padding-right: 1rem;
+  line-height: 5rem;
+  font-size: 2rem;
+  box-shadow: 
+    inset 0.25rem 0.25rem 0.25rem rgba(255, 255, 255, 0.5),
+    inset -0.25rem -0.25rem 0.25rem rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.1s, background-color 0.1s;
+
+  width: 15rem;
+}
+
+.metabar-riffer-name-cont > div:has(input[type="checkbox"]:checked)
+{
+  background-color: lightpink;
+  box-shadow: 
+    inset 0 0 0.75rem red,
+    inset -0.25rem -0.25rem 0.25rem rgba(255, 255, 255, 0.5),
+    inset 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+
+.metabar-riffer-name-cont > div:has(input[type="checkbox"]:active)
+{
+  background-color: lightpink;
+  box-shadow: 
+    inset -0.25rem -0.25rem 0.25rem rgba(255, 255, 255, 0.5),
+    inset 0.25rem 0.25rem 0.25rem rgba(0, 0, 0, 0.5);
+}
+
+.metabar-riffer-name-id-flex
+{
+  display: flex;
+}
+
+.metabar-riffer-name
+{
+  /*
+  flex-shrink: 1;
+  */
+  flex-grow: 1;
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  width: calc(100% - 8rem);
+  overflow: hidden;
+}
+
+.metabar-riffer-id
+{
+  width: max-content;
+}
+
+
+
+/* older code */
+
 .container-riff-meta {
   display: flex;
   height: variables.$small;
@@ -26,8 +185,8 @@
 }
 
 #meta-play-head {
-  height: variables.$small;
-  background-color: yellow;
+  height: 100%;
+  background-color: red;
   width: 1px;
   position: absolute;
   z-index: 3;

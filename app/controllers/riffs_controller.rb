@@ -33,7 +33,7 @@ class RiffsController < ApplicationController
                 render json: (riffs or [])
             end
         elsif video.present?
-            # TODO: maybe set up cache of user names
+            # TODO: !! set up cache of user names
             riffs = Video.find_by(url: video)
                 &.riffs
                 .as_json
@@ -110,6 +110,11 @@ class RiffsController < ApplicationController
     def show
         riff = Riff.find(params[:id])
         send_data riff.audio
+    end
+    
+    def showmeta
+        @riff = Riff.find(params[:id])
+        render layout: false
     end
 
     # GET	/photos/:id/edit	photos#edit	return an HTML form for editing a photo

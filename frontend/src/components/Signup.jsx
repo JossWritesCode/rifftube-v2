@@ -59,6 +59,7 @@ const Signup = ({
         });
     };
 
+    // TODO: replace createRef with useRef
     const email_ref = React.createRef();
     const pwd_ref = React.createRef();
     const name_ref = React.createRef();

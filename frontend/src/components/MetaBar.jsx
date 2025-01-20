@@ -9,6 +9,10 @@ const MetaBar = ({ riffsMeta, riffs, duration, metaBarPlayhead, setMetaBarPlayhe
   const [search, setSearch] = useSearchParams();
   */
 
+  // this is fucked up but works
+  // well maybe it's ok
+  // TODO: fix it?
+  // docs say useRef() is equivalent to useState(() => createRef(null))
   useEffect( () => {setMetaBarPlayhead(createRef())}, []);
 
   return (

@@ -13,8 +13,17 @@ import {
   PLAY_MODE,
   PAUSE_MODE,
 } from '../../actions/index.js';
+import VideoSidebar from './VideoSidebar.jsx';
+import ShowRiffsMeta from './ShowRiffsMeta.jsx';
 
 // based on https://stackoverflow.com/questions/54017100/how-to-integrate-youtube-iframe-api-in-reactjs-solution
+
+/*
+  props:
+    zoomState, setZoomState
+    more
+    setRiffMute
+*/
 
 class YouTubeVideo extends React.Component
 {
@@ -224,6 +233,25 @@ class YouTubeVideo extends React.Component
 
             this.showRiffer(riff);
 
+            // TODO: feed in user options as props
+            if (riff.speak)
+            {
+              const voiceInfo = JSON.parse(riff.voice);
+              
+              const utterThis = new SpeechSynthesisUtterance(riff.text);
+              utterThis.pitch = voiceInfo.pitch;
+              utterThis.rate = voiceInfo.rate;
+
+              let voices = speechSynthesis.getVoices();
+              for (let voice of voices)
+              {
+                  if (voiceInfo?.lang == voice.lang && voiceInfo?.name == voice.name)
+                    utterThis.voice = voice;
+              }
+              
+              speechSynthesis.speak(utterThis);
+            }
+
             if (!riff.isText) {
               if (!this.vol) {
                 this.vol = this.props.rifftubePlayer.getVolume();
@@ -354,27 +382,20 @@ class YouTubeVideo extends React.Component
       <React.Fragment>
         <div className="rifftube-container">
           {/* <AllowPlayback />*/}
+          <VideoSidebar
+            zoomState={this.props.zoomState}
+            setZoomState={this.props.setZoomState} />
           <div className="rifftube-overlay">
             <div className="rifftube-riffs-container">
-              <div className="rifftube-riffers" ref={this.riffersRef}></div>
-              {/*Object.keys(this.props.riffsPlaying)
-                .filter(
-                  (i) =>
-                    this.props.riffsPlaying[i] &&
-                    this.props.riffs[i] &&
-                    this.props.riffs[i].text !== ''
-                )
-                .map((key) => (
-                  <div
-                    key={this.props.riffs[key].id}
-                    className="rifftube-textriff"
-                  >
-                    {this.props.riffs[key].payload}
-                  </div>
-                ))*/}
+              <div className="rifftube-riffers" ref={this.riffersRef} />
             </div>
           </div>
           <div id="rifftube-player" />
+          <ShowRiffsMeta
+            setRiffMute={this.props.setRiffMute}
+            showRiff={this.props.showRiff}
+            setShowRiff={this.props.setShowRiff}
+            showRiffRef={this.props.showRiffRef} />
         </div>
       </React.Fragment>
     );

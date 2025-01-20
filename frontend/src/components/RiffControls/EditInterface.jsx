@@ -224,29 +224,25 @@ const EditInterface = (props) => {
         <div style={{fontSize: "180%",}}>
           <h1>Getting Started</h1>
           <p>
-            To record a riff, press and hold the R key. Recording occurs while the key is held down.
+            To <b>record a riff</b>, press and hold the <b>R</b> key, or press and hold down the <b>red button</b>. Recording occurs while the key or mouse button is held down.
           </p>
           <p>
-            To create a new text riff, press and hold the T key.
+            To create a new <b>text riff</b>, press and hold the <b>T</b> key.
           </p>
           <p>
-            You can add audio to a text riff, or remove audio and use only text, at any time.
+            You can edit your riff in any way, or delete it, after you save it.
           </p>
           <p>
-            ⇥ means &quot;jump to&quot;
+          jump to: ⇥
           </p>
           <p>
-            ✎ means &quot;edit&quot;
+          edit: ✎
           </p>
           <p>
-            🗑 means &quot;delete&quot;
+          delete: 🗑
           </p>
           <p>
             Adjust the timing by 0.5 seconds with the up and down arrows.
-          </p>
-          <p>
-            If pressing R and T does not bring up the New Riff dialog,
-            click somewhere outside the YouTube video.
           </p>
           <form method="dialog">
             <button
