@@ -14,6 +14,7 @@ import {
   PAUSE_MODE,
 } from '../../actions/index.js';
 import VideoSidebar from './VideoSidebar.jsx';
+import ShowRiffsMeta from './ShowRiffsMeta.jsx';
 
 // based on https://stackoverflow.com/questions/54017100/how-to-integrate-youtube-iframe-api-in-reactjs-solution
 
@@ -384,25 +385,14 @@ class YouTubeVideo extends React.Component
             setZoomState={this.props.setZoomState} />
           <div className="rifftube-overlay">
             <div className="rifftube-riffs-container">
-              <div className="rifftube-riffers" ref={this.riffersRef}></div>
-              {/*Object.keys(this.props.riffsPlaying)
-                .filter(
-                  (i) =>
-                    this.props.riffsPlaying[i] &&
-                    this.props.riffs[i] &&
-                    this.props.riffs[i].text !== ''
-                )
-                .map((key) => (
-                  <div
-                    key={this.props.riffs[key].id}
-                    className="rifftube-textriff"
-                  >
-                    {this.props.riffs[key].payload}
-                  </div>
-                ))*/}
+              <div className="rifftube-riffers" ref={this.riffersRef} />
             </div>
           </div>
           <div id="rifftube-player" />
+          <ShowRiffsMeta
+            showRiff={this.props.showRiff}
+            setShowRiff={this.props.setShowRiff}
+            showRiffRef={this.props.showRiffRef} />
         </div>
       </React.Fragment>
     );

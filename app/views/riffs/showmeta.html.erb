@@ -1,0 +1,21 @@
+<table>
+
+<tr>
+<td>Text</td>
+<td>
+<%= @riff.text %>
+</td>
+</tr>
+
+<tr>
+<td>Start / Duration</td>
+<td>
+<%= @riff.start %> / <%= @riff.duration %>
+</td>
+</tr>
+
+</table>
+
+<audio controls
+    src="<%= @riff.id.present? && @riff.audio != nil ? riff_path(@riff.id) : '' %>">
+</audio>

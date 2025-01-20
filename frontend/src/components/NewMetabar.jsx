@@ -18,10 +18,12 @@ const NewMetabar = (props) =>
   // real values don't matter for the initialization maybe
   const [state, setState] = useState({ riffsByRiffer: [], myTracks: null, filteredRiffs: [] });
   const [zoomState, setZoomState] = useState(false);
+  const [showRiff, setShowRiff] = useState({riffId: 42});
   const [search, setSearch] = useSearchParams();
   
   const scrollDiv = useRef();
   const playhead = useRef();
+  const riffDiv = useRef();
 
   const mbc = useCallback(() =>
   {
@@ -156,8 +158,9 @@ const NewMetabar = (props) =>
     <React.Fragment>
       <YouTubeVideo
         id={props.id}
-        zoomState={zoomState}
-        setZoomState={setZoomState}
+        zoomState={zoomState} setZoomState={setZoomState}
+        showRiff={showRiff} setShowRiff={setShowRiff}
+        showRiffRef={riffDiv}
         riffs={state.filteredRiffs} />
       <div className="metabar-cont">
         <div className="metabar-riffers">
