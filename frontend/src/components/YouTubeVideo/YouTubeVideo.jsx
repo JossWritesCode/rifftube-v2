@@ -21,6 +21,8 @@ import ShowRiffsMeta from './ShowRiffsMeta.jsx';
 /*
   props:
     zoomState, setZoomState
+    more
+    setRiffMute
 */
 
 class YouTubeVideo extends React.Component
@@ -390,6 +392,7 @@ class YouTubeVideo extends React.Component
           </div>
           <div id="rifftube-player" />
           <ShowRiffsMeta
+            setRiffMute={this.props.setRiffMute}
             showRiff={this.props.showRiff}
             setShowRiff={this.props.setShowRiff}
             showRiffRef={this.props.showRiffRef} />

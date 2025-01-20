@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
     showRiff
     setShowRiff
     showRiffRef
+    setRiffMute
 */
 const ShowRiffsMeta = (props) =>
 {
@@ -17,7 +18,7 @@ const ShowRiffsMeta = (props) =>
 
             if (props.showRiff)
             {
-                fetch(`/riffs/${props.showRiff.riffId}/meta`)
+                fetch(`/riffs/${props.showRiff.id}/meta`)
                 .then(response => response.text())
                 .then(text =>
                 {
@@ -44,6 +45,17 @@ const ShowRiffsMeta = (props) =>
             ?
                 <div className="rifftube-riffmeta">
                     <div ref={props.showRiffRef} />
+
+                    <div>
+                        <label>
+                            <input
+                                type="checkbox"
+                                defaultChecked={props.showRiff.mute}
+                                onChange={e => props.setRiffMute(props.showRiff.user_id, props.showRiff.id, e.target.checked)} />
+                            Mute Riff
+                        </label>
+                    </div>
+
                     <button onClick={() => props.setShowRiff(null)}>
                         Close
                     </button>

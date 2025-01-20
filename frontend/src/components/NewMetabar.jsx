@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import YouTubeVideo from './YouTubeVideo/YouTubeVideo';
 import { setMetaBarPlayhead, setMetaBarCallback } from '../actions';
+import Audio from '../images/settings_voice-24px.svg';
+import Text from '../images/chat-24px.svg';
 
 /*
   props:
@@ -18,7 +20,7 @@ const NewMetabar = (props) =>
   // real values don't matter for the initialization maybe
   const [state, setState] = useState({ riffsByRiffer: [], myTracks: null, filteredRiffs: [] });
   const [zoomState, setZoomState] = useState(false);
-  const [showRiff, setShowRiff] = useState({riffId: 42});
+  const [showRiff, setShowRiff] = useState();
   const [search, setSearch] = useSearchParams();
   
   const scrollDiv = useRef();
@@ -154,6 +156,31 @@ const NewMetabar = (props) =>
   }, [search.get("solo"), props.riffs, props.timestamp]);
   // TODO: remove timestamp stuff, I think
 
+  const setRiffMute = (rifferId, riffId, mute) =>
+  {
+    const riffsByRiffer = state.riffsByRiffer.map(
+      riffer =>
+      {
+        return {
+          ...riffer, tracks: riffer.tracks.map(
+            track =>
+            {
+              return track.map(
+                riff =>
+                {
+                  if (riffer.user_id == rifferId && riff.id == riffId)
+                    return {...riff, muted: mute}
+                  return riff
+                }
+              )
+            }
+          )
+        }
+      }
+    )
+    setState({...state, riffsByRiffer});
+  }
+
   return (
     <React.Fragment>
       <YouTubeVideo
@@ -161,6 +188,7 @@ const NewMetabar = (props) =>
         zoomState={zoomState} setZoomState={setZoomState}
         showRiff={showRiff} setShowRiff={setShowRiff}
         showRiffRef={riffDiv}
+        setRiffMute={setRiffMute}
         riffs={state.filteredRiffs} />
       <div className="metabar-cont">
         <div className="metabar-riffers">
@@ -242,13 +270,21 @@ const NewMetabar = (props) =>
                         track.map(riff => (
                           <div
                             key={riff.id}
+                            onClick={() => setShowRiff(riff)}
                             style={{
                               "--start": riff.start / props.duration,
                               "--duration": riff.duration / props.duration,
-                              "--bgcolor": riffer.muted ? "rgba(100, 100, 100, 0.3)" : "rgba(255, 100, 100, 0.3)"
+                              "--bgcolor": riffer.muted || riff.muted ? "rgba(100, 100, 100, 0.3)" : "rgba(255, 100, 100, 0.3)"
                             }}
                             className="metabar-riffer-track-riff">
-                              {riff.start} / {props.duration} = {riff.start / props.duration}
+                          {
+                            riff.isText
+                            ? (
+                                <img alt="text" src={Text} />
+                            ) : (
+                                <img alt="audio" src={Audio} />
+                            )
+                          }
                           </div>
                         ))
                       }
