@@ -32,7 +32,7 @@ const ShowRiffsMeta = (props) =>
     useEffect(
         () =>
         {
-            (props.showRiffRef.current || {}).innerHTML = data;
+            (props.showRiffRef?.current || {}).innerHTML = data;
         },
         [props.showRiffRef, data]
     )
