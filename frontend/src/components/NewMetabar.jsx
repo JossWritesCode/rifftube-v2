@@ -275,7 +275,7 @@ const NewMetabar = (props) =>
                               "--start": riff.start / props.duration,
                               "--duration": riff.duration / props.duration,
                               "--bgcolor": riffer.muted || riff.muted ? "rgba(100, 100, 100, 0.3)" : "rgba(255, 100, 100, 0.3)",
-                              "border-color": showRiff?.id == riff.id ? "red" : "transparent",
+                              "borderColor": showRiff?.id == riff.id ? "red" : "transparent",
                             }}
                             className="metabar-riffer-track-riff">
                           {

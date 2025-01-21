@@ -30,6 +30,7 @@ class YouTubeVideo extends React.Component
   constructor(props) {
     super(props);
     this.riffersRef = createRef();
+    this.fastState = {}
     this.state = { riffCont: {} };
   }
 
@@ -55,7 +56,7 @@ class YouTubeVideo extends React.Component
 
   showRiffer(riff)
   {
-    console.log("show", riff);
+    console.log("show", riff, this.state);
     let rifferCont = document.createElement("div");
     let riffPic = document.createElement("img");
     try
@@ -75,15 +76,17 @@ class YouTubeVideo extends React.Component
       rifferCont.append(textDiv);
     }
     this.riffersRef.current.append(rifferCont);
-    this.setState({ riffCont: {...this.state.riffCont, [riff.id]: rifferCont} });
-    //riff.riffPicCont = rifferCont;
-
+    this.fastState[riff.id] = rifferCont;
+    // TODO: fix this ^^^
+    // using state was working... for a while
+    //this.setState({ riffCont: {...this.state.riffCont, [riff.id]: rifferCont} });
   }
   
   hideRiffer(riff)
   {
-    console.log("hide", riff);
-    const cont = this.state.riffCont[riff.id];
+    console.log("hide", riff, this.state);
+    //const cont = this.state.riffCont[riff.id];
+    const cont = this.fastState[riff.id];
     cont.classList.add("hiding");
     cont.addEventListener('animationend', () => {
       //console.log('Animation ended');
